@@ -2,7 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
 import com.ponomarevnikolaidiplom.entities.Patient;
-import com.ponomarevnikolaidiplom.service.interfacies.PatientService;
+import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

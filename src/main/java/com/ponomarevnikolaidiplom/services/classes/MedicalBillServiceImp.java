@@ -1,9 +1,9 @@
-package com.ponomarevnikolaidiplom.service.classes;
+package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.entities.MedicalBill;
 import com.ponomarevnikolaidiplom.repozitories.MedicalBillRepository;
-import com.ponomarevnikolaidiplom.service.interfacies.MedicalBillService;
+import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.ponomarevnikolaidiplom.service.interfacies;
+package com.ponomarevnikolaidiplom.services.interfacies;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.entities.Doctor;

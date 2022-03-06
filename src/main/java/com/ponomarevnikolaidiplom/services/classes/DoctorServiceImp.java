@@ -1,10 +1,9 @@
-package com.ponomarevnikolaidiplom.service.classes;
+package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.entities.Doctor;
-import com.ponomarevnikolaidiplom.entities.Patient;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
-import com.ponomarevnikolaidiplom.service.interfacies.DoctorService;
+import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

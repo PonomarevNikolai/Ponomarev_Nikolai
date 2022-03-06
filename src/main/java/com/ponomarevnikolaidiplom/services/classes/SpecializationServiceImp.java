@@ -1,9 +1,9 @@
-package com.ponomarevnikolaidiplom.service.classes;
+package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
 import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
-import com.ponomarevnikolaidiplom.service.interfacies.SpecializationService;
+import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

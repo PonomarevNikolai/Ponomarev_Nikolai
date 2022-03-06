@@ -2,7 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.entities.MedicalBill;
-import com.ponomarevnikolaidiplom.service.interfacies.MedicalBillService;
+import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
