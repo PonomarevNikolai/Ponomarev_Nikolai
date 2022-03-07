@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
+import com.ponomarevnikolaidiplom.dto.responce.PatientResponce;
 import com.ponomarevnikolaidiplom.entities.Patient;
 import com.ponomarevnikolaidiplom.repozitories.PatientRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,15 +26,17 @@ public class PatientServiceImp implements PatientService {
     }
 
     @Override
-    public Patient getPatient(Long id) {
+    public PatientResponce getPatient(Long id) {
         log.info("get Patient by id");
-        return patientRepository.getById(id);
+        return convertPatientToPatientResponce(patientRepository.getById(id));
     }
 
     @Override
-    public List<Patient> getAllPatients() {
+    public List<PatientResponce> getAllPatients() {
         log.info("get all Patients ");
-        return patientRepository.findAll();
+        List<PatientResponce> patientResponceList=new ArrayList<>();
+        patientRepository.findAll().forEach(patient -> patientResponceList.add(convertPatientToPatientResponce(patient)));
+        return patientResponceList;
     }
 
     @Override
@@ -76,5 +80,13 @@ public class PatientServiceImp implements PatientService {
                 request.getName(),
                 request.getPhoneNumber(),
                 request.getAddress());
+    }
+    private PatientResponce convertPatientToPatientResponce(Patient responce) {
+
+        return new PatientResponce(responce.getId(),
+                responce.getNumberOfInsurance(),
+                responce.getName(),
+                responce.getPhoneNumber(),
+                responce.getAddress());
     }
 }

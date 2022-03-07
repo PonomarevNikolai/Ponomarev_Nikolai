@@ -1,6 +1,8 @@
 package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
+import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
+import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
@@ -22,20 +24,24 @@ public class DoctorServiceImp implements DoctorService {
     public String saveDoctor(DoctorRequest doctorRequest) {
         doctorRepository.save(convertRequestToDoctor(doctorRequest));
         log.info("new Doctor added");
-        return doctorRequest.getName();
+        return "New Doctor added name="+doctorRequest.getName();
     }
 
     @Override
-    public Doctor getDoctor(Long id) {
+    public DoctorResponce getDoctor(Long id) {
         log.info("get Doctor by id={}", id);
-        return doctorRepository.findDoctorById(id);
+        return convertDoctorToDoctorResponce(doctorRepository.findDoctorById(id));
 
     }
 
     @Override
-    public List<Doctor> getAllDoctors() {
+    public List<DoctorResponce> getAllDoctors() {
         log.info("get all Doctors");
-        return doctorRepository.findAll();
+        List<DoctorResponce> doctorResponceList=new ArrayList<>();
+        doctorRepository.findAll().forEach(doctor ->
+            doctorResponceList.add(convertDoctorToDoctorResponce(doctor))
+        );
+        return doctorResponceList;
     }
 
     @Override
@@ -54,15 +60,24 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public void deleteDoctor(Long id) {
+    public String deleteDoctor(Long id) {
         log.info("deleted Doctor id={} ", id);
         doctorRepository.deleteById(id);
-
+        return "Доктор удален id="+id;
     }
 
     private Doctor convertRequestToDoctor(DoctorRequest request) {
 
         return new Doctor(request.getId(), request.getName(), new ArrayList<>());
+    }
+    private DoctorResponce convertDoctorToDoctorResponce(Doctor responce) {
+        List<SpecializationResponce> specializationList=new ArrayList<>();
+        responce.getSpecializationList().forEach(specialization ->
+            specializationList.add(new SpecializationResponce(specialization.getId(), specialization.getName()))
+        );
+        return new DoctorResponce(responce.getId(),
+                responce.getName(),
+                specializationList);
     }
 
 }

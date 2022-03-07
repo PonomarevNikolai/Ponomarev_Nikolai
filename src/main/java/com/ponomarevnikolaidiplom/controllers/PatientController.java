@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
+import com.ponomarevnikolaidiplom.dto.responce.PatientResponce;
 import com.ponomarevnikolaidiplom.entities.Patient;
 import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ public class PatientController {
     final PatientService patientService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Patient>> getAllPatients() {
+    public ResponseEntity<List<PatientResponce>> getAllPatients() {
         return ResponseEntity.ok().body(patientService.getAllPatients());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatient(@PathVariable @RequestBody Long id){
+    public ResponseEntity<PatientResponce> getPatient(@PathVariable @RequestBody Long id){
         return ResponseEntity.ok().body(patientService.getPatient(id));
     }
     @PostMapping("/save")

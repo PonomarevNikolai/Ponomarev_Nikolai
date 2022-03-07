@@ -1,6 +1,8 @@
 package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
+import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
+import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
@@ -25,15 +27,18 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public Specialization getSpecialization(Long id) {
+    public SpecializationResponce getSpecialization(Long id) {
         log.info("get Specialization by id={}", id);
-        return specializationRepository.getById(id);
+        return convertSpecializationToSpecializationResponce(specializationRepository.getById(id));
     }
 
     @Override
-    public List<Specialization> getAllSpecialization() {
+    public List<SpecializationResponce> getAllSpecialization() {
         log.info("get all Specializations");
-        return specializationRepository.findAll();
+        List<SpecializationResponce> specializationResponceList=new ArrayList<>();
+        specializationRepository.findAll().forEach(specialization ->
+                specializationResponceList.add(convertSpecializationToSpecializationResponce(specialization)));
+        return specializationResponceList;
     }
 
     @Override
@@ -52,9 +57,10 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public void deleteSpecialization(Long id) {
+    public String deleteSpecialization(Long id) {
         log.info("deleted Specialization id={}", id);
         specializationRepository.deleteById(id);
+        return "удален Пациент с id="+id;
     }
 
     private Specialization convertRequestToSpecialization(SpecializationRequest request) {
@@ -62,5 +68,14 @@ public class SpecializationServiceImp implements SpecializationService {
         return new Specialization(request.getId(),
                 request.getName(),
                 new ArrayList<>());
+    }
+    private SpecializationResponce convertSpecializationToSpecializationResponce(Specialization responce) {
+        List<DoctorResponce> doctorResponceList = new ArrayList<>();
+        responce.getDoctorList().forEach(doctor ->
+                doctorResponceList.add(new DoctorResponce(doctor.getId(), doctor.getName()))
+        );
+        return new SpecializationResponce(responce.getId(),
+                responce.getName(),
+                doctorResponceList);
     }
 }

@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
+import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,11 @@ public class DoctorController {
     final DoctorService doctorService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
+    public ResponseEntity<List<DoctorResponce>> getAllDoctors() {
         return ResponseEntity.ok().body(doctorService.getAllDoctors());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctor(@PathVariable @RequestBody Long id){
+    public ResponseEntity<DoctorResponce> getDoctor(@PathVariable @RequestBody Long id){
         return ResponseEntity.ok().body(doctorService.getDoctor(id));
     }
     @PostMapping("/save")
@@ -37,8 +38,7 @@ public class DoctorController {
 
     @DeleteMapping ("/delete")
     public ResponseEntity<String> deleteDoctor(@RequestBody DoctorRequest request) {
-        doctorService.deleteDoctor(request.getId());
-        return ResponseEntity.ok().body("Доктор удален id="+request.getId());
+        return ResponseEntity.ok().body(doctorService.deleteDoctor(request.getId()));
     }
 }
 

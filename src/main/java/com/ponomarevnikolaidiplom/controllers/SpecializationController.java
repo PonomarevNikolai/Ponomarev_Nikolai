@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
+import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,11 @@ public class SpecializationController {
     final SpecializationService specializationService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Specialization>> getAllSpecialization() {
+    public ResponseEntity<List<SpecializationResponce>> getAllSpecialization() {
         return ResponseEntity.ok().body(specializationService.getAllSpecialization());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Specialization> getSpecialization(@PathVariable @RequestBody Long id){
+    public ResponseEntity<SpecializationResponce> getSpecialization(@PathVariable @RequestBody Long id){
         return ResponseEntity.ok().body(specializationService.getSpecialization(id));
     }
     @PostMapping("/save")
@@ -39,7 +40,6 @@ public class SpecializationController {
 
     @DeleteMapping ("/delete")
     public ResponseEntity<String> deleteSpecialization(@RequestBody SpecializationRequest request) {
-        specializationService.deleteSpecialization(request.getId());
-        return ResponseEntity.ok().body("удален Пациент с id="+request.getId());
+        return ResponseEntity.ok().body(specializationService.deleteSpecialization(request.getId()));
     }
 }

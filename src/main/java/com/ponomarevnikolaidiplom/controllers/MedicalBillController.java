@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
+import com.ponomarevnikolaidiplom.dto.responce.MedicalBillResponce;
 import com.ponomarevnikolaidiplom.entities.MedicalBill;
 import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,11 @@ public class MedicalBillController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<MedicalBill>> getAllMedicalBills() {
+    public ResponseEntity<List<MedicalBillResponce>> getAllMedicalBills() {
         return ResponseEntity.ok().body(medicalBillService.getAllMedicalBills());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<MedicalBill> getMedicalBill(@PathVariable @RequestBody Long id){
+    public ResponseEntity<MedicalBillResponce> getMedicalBill(@PathVariable @RequestBody Long id){
         return ResponseEntity.ok().body(medicalBillService.getMedicalBill(id));
     }
     @PostMapping("/save")
@@ -38,8 +39,8 @@ public class MedicalBillController {
 
     @DeleteMapping ("/delete")
     public ResponseEntity<String> deleteMedicalBill(@RequestBody MedicalBillRequest request) {
-        medicalBillService.deleteMedicalBill(request.getId());
-        return ResponseEntity.ok().body("Услуга удалена id="+request.getId());
+
+        return ResponseEntity.ok().body(medicalBillService.deleteMedicalBill(request.getId()));
     }
 
 }
