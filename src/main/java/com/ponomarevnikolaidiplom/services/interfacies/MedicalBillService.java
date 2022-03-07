@@ -10,6 +10,6 @@ public interface MedicalBillService {
     String saveMedicalBill(MedicalBillRequest request);
     MedicalBill getMedicalBill(Long id);
     List<MedicalBill> getAllMedicalBills();
-    void updateMedicalBill(MedicalBillRequest request);
+    String updateMedicalBill(MedicalBillRequest request);
     void deleteMedicalBill(Long id);
 }

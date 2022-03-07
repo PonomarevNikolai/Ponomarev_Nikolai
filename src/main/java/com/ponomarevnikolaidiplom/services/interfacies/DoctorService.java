@@ -9,6 +9,6 @@ public interface DoctorService {
     String saveDoctor(DoctorRequest request);
     Doctor getDoctor(Long id);
     List<Doctor> getAllDoctors();
-    void updateDoctor(DoctorRequest request);
+    String updateDoctor(DoctorRequest request);
     void deleteDoctor(Long id);
 }

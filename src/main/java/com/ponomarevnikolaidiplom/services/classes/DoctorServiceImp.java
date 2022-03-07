@@ -39,18 +39,18 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public void updateDoctor(DoctorRequest request) {
-        Doctor update = doctorRepository.getById(request.getId());
+    public String updateDoctor(DoctorRequest request) {
+        Doctor update = doctorRepository.findDoctorById(request.getId());
         if (update == null) {
-            throw new RuntimeException("Patient not found");
+            throw new RuntimeException("Doctor not found");
         }
-        if (request.getName() == null) {
+        if (request.getName() != null) {
             update.setName(request.getName());
         }
 
-        doctorRepository.save(update);
+        doctorRepository.saveAndFlush(update);
         log.info("updated Doctor id={} to name={}", request.getId(), request.getName());
-
+        return "Обновлен доктор с id=" + update.getId()+" name="+request.getName();
     }
 
     @Override

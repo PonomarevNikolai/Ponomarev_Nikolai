@@ -40,12 +40,12 @@ public class SpecializationServiceImp implements SpecializationService {
     public void updateSpecialization(SpecializationRequest request) {
         Specialization update = specializationRepository.getById(request.getId());
         if (update == null) {
-            throw new RuntimeException("Patient not found");
+            throw new RuntimeException("Specialization not found");
         }
-        if (request.getName() == null) {
+        if (request.getName() != null) {
             update.setName(request.getName());
         }
-        specializationRepository.save(update);
+        specializationRepository.saveAndFlush(update);
         log.info("updated Specialization id={}", request.getId());
 
     }

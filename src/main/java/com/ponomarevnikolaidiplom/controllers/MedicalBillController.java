@@ -32,8 +32,8 @@ public class MedicalBillController {
 
     @PutMapping("/update")
     public ResponseEntity<String> updateMedicalBill(@RequestBody MedicalBillRequest request){
-        medicalBillService.updateMedicalBill(request);
-        return ResponseEntity.ok().body("Обновлена услуга с id={}"+request.getId());
+
+        return ResponseEntity.ok().body(medicalBillService.updateMedicalBill(request));
     }
 
     @DeleteMapping ("/delete")

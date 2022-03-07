@@ -28,7 +28,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
     @Override
     public MedicalBill getMedicalBill(Long id) {
         log.info("get MedicalBill by id={}", id);
-        return medicalBillRepository.getById(id);
+        return medicalBillRepository.findMedicalBillById(id);
     }
 
     @Override
@@ -38,12 +38,21 @@ public class MedicalBillServiceImp implements MedicalBillService {
     }
 
     @Override
-    public void updateMedicalBill(MedicalBillRequest request) {
+    public String updateMedicalBill(MedicalBillRequest request) {
        MedicalBill update = medicalBillRepository.getById(request.getId());
-       update.setName(request.getName());
-       update.setPrice(request.getPrice());
-       medicalBillRepository.save(update);
+        if (update == null) {
+            throw new RuntimeException("MedicalBill not found");
+        }
+        if (request.getName() != null) {
+            update.setName(request.getName());
+        }
+        if (request.getPrice()!=null){
+            update.setPrice(request.getPrice());
+        }
+
+       medicalBillRepository.saveAndFlush(update);
         log.info("updated MedicalBill id={} to name={}", request.getId(), request.getName());
+        return "Обновлена услуга с id="+update.getId()+" name="+request.getName();
     }
 
     @Override

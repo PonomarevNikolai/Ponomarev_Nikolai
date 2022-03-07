@@ -36,28 +36,29 @@ public class PatientServiceImp implements PatientService {
     }
 
     @Override
-    public void updatePatient(PatientRequest request) {
+    public String updatePatient(PatientRequest request) {
         Patient update = patientRepository.getById(request.getId());
         if (update == null) {
             throw new RuntimeException("Patient not found");
         }
-        if (request.getName() == null) {
+        if (request.getName() != null) {
             update.setName(request.getName());
         }
-        if (request.getNumberOfInsurance() == null) {
+        if (request.getNumberOfInsurance() != null) {
             update.setNumberOfInsurance(request.getNumberOfInsurance());
         }
 
-        if (request.getAddress() == null) {
+        if (request.getAddress() != null) {
             update.setAddress(request.getAddress());
         }
 
-        if (request.getPhoneNumber() == null) {
+        if (request.getPhoneNumber() != null) {
             update.setPhoneNumber(request.getPhoneNumber());
         }
 
-        patientRepository.save(update);
+        patientRepository.saveAndFlush(update);
         log.info("updated Patient id={}", request.getId());
+        return "Обновлен Pacient с id=" + update.getId()+" name="+request.getName();
 
     }
 

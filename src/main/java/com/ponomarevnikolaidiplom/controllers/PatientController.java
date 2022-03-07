@@ -31,8 +31,8 @@ public class PatientController {
 
     @PutMapping("/update")
     public ResponseEntity<String> updatePatient(@RequestBody PatientRequest request){
-        patientService.updatePatient(request);
-        return ResponseEntity.ok().body("Обновлен Пациент с id={}"+request.getId());
+
+        return ResponseEntity.ok().body(patientService.updatePatient(request));
     }
 
     @DeleteMapping ("/delete")

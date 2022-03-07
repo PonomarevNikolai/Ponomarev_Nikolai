@@ -30,13 +30,13 @@ public class DoctorController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> saveCar(@RequestBody DoctorRequest request){
+    public ResponseEntity<String> updateDoctor(@RequestBody DoctorRequest request){
         doctorService.updateDoctor(request);
-        return ResponseEntity.ok().body("Обновлен доктор с id={}"+request.getId());
+        return ResponseEntity.ok().body(doctorService.updateDoctor(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> updateDoctor(@RequestBody DoctorRequest request) {
+    public ResponseEntity<String> deleteDoctor(@RequestBody DoctorRequest request) {
         doctorService.deleteDoctor(request.getId());
         return ResponseEntity.ok().body("Доктор удален id="+request.getId());
     }
