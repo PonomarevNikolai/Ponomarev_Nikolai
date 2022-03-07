@@ -37,7 +37,7 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public void updateSpecialization(SpecializationRequest request) {
+    public String updateSpecialization(SpecializationRequest request) {
         Specialization update = specializationRepository.getById(request.getId());
         if (update == null) {
             throw new RuntimeException("Specialization not found");
@@ -47,6 +47,7 @@ public class SpecializationServiceImp implements SpecializationService {
         }
         specializationRepository.saveAndFlush(update);
         log.info("updated Specialization id={}", request.getId());
+        return "updated Specialization  id=" + update.getId()+" name="+request.getName();
 
     }
 

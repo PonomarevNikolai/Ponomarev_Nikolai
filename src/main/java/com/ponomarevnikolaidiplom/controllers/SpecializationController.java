@@ -33,8 +33,8 @@ public class SpecializationController {
 
     @PutMapping("/update")
     public ResponseEntity<String> updateSpecialization(@RequestBody SpecializationRequest request){
-        specializationService.updateSpecialization(request);
-        return ResponseEntity.ok().body("Обновлена Специализация с id={}"+request.getId());
+
+        return ResponseEntity.ok().body(specializationService.updateSpecialization(request));
     }
 
     @DeleteMapping ("/delete")
