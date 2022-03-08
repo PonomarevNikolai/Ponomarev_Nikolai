@@ -19,10 +19,9 @@ public class PatientServiceImp implements PatientService {
 
     final PatientRepository patientRepository;
 
-    public String savePatient(PatientRequest request) {
-        log.info("new Patient added");
-        patientRepository.save(convertRequestToPatient(request));
-        return request.getName();
+    public PatientResponce savePatient(PatientRequest request) {
+        log.info("new Patient added name={}",request.getName());
+        return convertPatientToPatientResponce(patientRepository.save(convertRequestToPatient(request)));
     }
 
     @Override
