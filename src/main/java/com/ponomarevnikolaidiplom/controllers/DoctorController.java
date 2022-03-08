@@ -3,7 +3,6 @@ package com.ponomarevnikolaidiplom.controllers;
 import com.ponomarevnikolaidiplom.dto.DtoId;
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
-import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
