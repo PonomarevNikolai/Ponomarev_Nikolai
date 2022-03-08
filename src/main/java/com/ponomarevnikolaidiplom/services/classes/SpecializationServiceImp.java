@@ -73,15 +73,13 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     private SpecializationResponce convertSpecializationToSpecializationResponce(Specialization responce) {
-        List<DoctorResponce> doctorResponceList = new ArrayList<>();
-        List<MedicalBillResponce> medicalBillResponceList = new ArrayList<>();
+        List<String> doctorResponceList = new ArrayList<>();
+        List<String> medicalBillResponceList = new ArrayList<>();
         responce.getDoctorList().forEach(doctor ->
-                doctorResponceList.add(new DoctorResponce(doctor.getId(), doctor.getName()))
+                doctorResponceList.add("id = "+doctor.getId()+", name = "+doctor.getName())
         );
         responce.getMedicalBillList().forEach(medicalBill ->
-                medicalBillResponceList.add(new MedicalBillResponce(medicalBill.getId(),
-                        medicalBill.getName(),
-                        medicalBill.getPrice())));
+                medicalBillResponceList.add("id = "+medicalBill.getId()+", name = "+medicalBill.getName()));
 
         return new SpecializationResponce(responce.getId(),
                 responce.getName(),

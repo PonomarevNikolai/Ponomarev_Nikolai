@@ -24,10 +24,10 @@ public class DoctorServiceImp implements DoctorService {
     final SpecializationRepository specializationRepository;
 
     @Override
-    public String saveDoctor(DoctorRequest doctorRequest) {
-        doctorRepository.save(convertRequestToDoctor(doctorRequest));
-        log.info("new Doctor added");
-        return "New Doctor added name="+doctorRequest.getName();
+    public DoctorResponce saveDoctor(DoctorRequest doctorRequest) {
+
+        log.info("new Doctor added name = "+doctorRequest.getName());
+        return convertDoctorToDoctorResponce(doctorRepository.save(convertRequestToDoctor(doctorRequest)));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class DoctorServiceImp implements DoctorService {
 
         doctorRepository.saveAndFlush(update);
         log.info("updated Doctor id={} to name={}", request.getId(), request.getName());
-        return "Обновлен доктор с id=" + update.getId()+" name="+request.getName();
+        return "Обновлен доктор с id = " + update.getId()+" name = "+request.getName();
     }
 
     @Override
@@ -83,6 +83,7 @@ public class DoctorServiceImp implements DoctorService {
         specialization.getDoctorList().add(doctor);
         doctorRepository.saveAndFlush(doctor);
         specializationRepository.saveAndFlush(specialization);
+        log.info("added Specialization name ={} to Doctor name={}", specialization.getName(), doctor.getName());
         return "Specialization name = "+specialization.getName()+" added to Doctor name="+doctor.getName();
     }
 
@@ -100,7 +101,8 @@ public class DoctorServiceImp implements DoctorService {
         doctor.getSpecializationList().remove(specialization);
         doctorRepository.saveAndFlush(doctor);
         specializationRepository.saveAndFlush(specialization);
-        return "Specialization name = "+specialization.getName()+" deleted from Doctor name="+doctor.getName();
+        log.info("deleted Specialization name ={} from Doctor name={}", specialization.getName(), doctor.getName());
+        return "deleted Specialization name = "+specialization.getName()+" from Doctor name="+doctor.getName();
     }
 
 
@@ -109,10 +111,9 @@ public class DoctorServiceImp implements DoctorService {
         return new Doctor(request.getId(), request.getName(), new ArrayList<>());
     }
     private DoctorResponce convertDoctorToDoctorResponce(Doctor responce) {
-        List<SpecializationResponce> specializationList=new ArrayList<>();
+        List<String> specializationList=new ArrayList<>();
         responce.getSpecializationList().forEach(specialization ->
-            specializationList.add(new SpecializationResponce(specialization.getId(), specialization.getName()))
-        );
+            specializationList.add("id = "+specialization.getId()+", name = "+specialization.getName()));
         return new DoctorResponce(responce.getId(),
                 responce.getName(),
                 specializationList);

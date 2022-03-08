@@ -10,8 +10,8 @@ import java.util.List;
 public class SpecializationResponce {
     private Long id;
     private String name;
-    private List<DoctorResponce> doctorResponceList;
-    private List<MedicalBillResponce> medicalBillResponceList;
+    private List<String> doctorResponceList;
+    private List<String> medicalBillResponceList;
 
     public SpecializationResponce(Long id, String name) {
         this.id = id;

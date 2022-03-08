@@ -11,7 +11,7 @@ public class MedicalBillResponce {
     private Long id;
     private String name;
     private Long price;
-    private List<SpecializationResponce> specializationList;
+    private List<String> specializationList;
 
     public MedicalBillResponce(Long id, String name, Long price) {
         this.id = id;

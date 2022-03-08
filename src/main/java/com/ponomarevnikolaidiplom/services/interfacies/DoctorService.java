@@ -7,7 +7,7 @@ import com.ponomarevnikolaidiplom.entities.Doctor;
 import java.util.List;
 
 public interface DoctorService {
-    String saveDoctor(DoctorRequest request);
+    DoctorResponce saveDoctor(DoctorRequest request);
 
     DoctorResponce getDoctor(Long id);
 

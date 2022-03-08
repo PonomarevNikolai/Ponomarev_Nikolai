@@ -111,10 +111,9 @@ public class MedicalBillServiceImp implements MedicalBillService {
     }
 
     private MedicalBillResponce convertMedicalBillToMedicalBillResponce(MedicalBill responce) {
-        List<SpecializationResponce> specializationList = new ArrayList<>();
+        List<String> specializationList = new ArrayList<>();
         responce.getSpecializationList().forEach(specialization ->
-                specializationList.add(new SpecializationResponce(specialization.getId(), specialization.getName()))
-        );
+                specializationList.add("id="+specialization.getId()+", name="+specialization.getName()));
         return new MedicalBillResponce(responce.getId(),
                 responce.getName(),
                 responce.getPrice(),

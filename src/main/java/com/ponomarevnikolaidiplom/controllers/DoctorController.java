@@ -26,7 +26,7 @@ public class DoctorController {
         return ResponseEntity.ok().body(doctorService.getDoctor(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<String> saveDoctor(@RequestBody DoctorRequest request){
+    public ResponseEntity<DoctorResponce> saveDoctor(@RequestBody DoctorRequest request){
         return ResponseEntity.ok().body(doctorService.saveDoctor(request));
     }
 
@@ -40,11 +40,11 @@ public class DoctorController {
     public ResponseEntity<String> deleteDoctor(@RequestBody DoctorRequest request) {
         return ResponseEntity.ok().body(doctorService.deleteDoctor(request.getId()));
     }
-    @PostMapping("/add-specialization")
+    @PostMapping("/addspecialization")
     public ResponseEntity<String> addSpecializationToDoctor(@RequestBody DtoId dtoId){
         return ResponseEntity.ok().body(doctorService.addSpecializationToDoctor(dtoId.getIdSpecilization(), dtoId.getIdDoctor()));
     }
-    @DeleteMapping("/delete-specialization")
+    @DeleteMapping("/deletespecialization")
     public ResponseEntity<String> deleteSpecializationFromDoctor(@RequestBody DtoId dtoId){
         return ResponseEntity.ok().body(doctorService.deleteSpecializationFromDoctor(dtoId.getIdSpecilization(), dtoId.getIdDoctor()));
     }
