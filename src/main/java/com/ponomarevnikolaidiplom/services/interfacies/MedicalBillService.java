@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MedicalBillService {
 
-    String saveMedicalBill(MedicalBillRequest request);
+    MedicalBillResponce saveMedicalBill(MedicalBillRequest request);
 
     MedicalBillResponce getMedicalBill(Long id);
 

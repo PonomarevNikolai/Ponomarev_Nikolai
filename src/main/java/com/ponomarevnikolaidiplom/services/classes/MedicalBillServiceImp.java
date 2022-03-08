@@ -2,8 +2,6 @@ package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.dto.responce.MedicalBillResponce;
-import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
-import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.MedicalBill;
 import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.repozitories.MedicalBillRepository;
@@ -25,10 +23,9 @@ public class MedicalBillServiceImp implements MedicalBillService {
     final SpecializationRepository specializationRepository;
 
     @Override
-    public String saveMedicalBill(MedicalBillRequest request) {
-        medicalBillRepository.save(convertRequestToMedicalBill(request));
+    public MedicalBillResponce saveMedicalBill(MedicalBillRequest request) {
         log.info("new MedicalBill added");
-        return request.getName();
+        return convertMedicalBillToMedicalBillResponce(medicalBillRepository.save(convertRequestToMedicalBill(request)));
     }
 
     @Override
@@ -85,7 +82,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
         specialization.getMedicalBillList().add(medicalBill);
         medicalBillRepository.saveAndFlush(medicalBill);
         specializationRepository.saveAndFlush(specialization);
-        return "Specialization name = "+specialization.getName()+" added to medicalBill name="+medicalBill.getName();
+        return "Specialization name = "+specialization.getName()+" added to medicalBill name = "+medicalBill.getName();
     }
 
     @Override

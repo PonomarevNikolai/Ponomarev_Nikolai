@@ -2,7 +2,6 @@ package com.ponomarevnikolaidiplom.services.interfacies;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
-import com.ponomarevnikolaidiplom.entities.Doctor;
 
 import java.util.List;
 

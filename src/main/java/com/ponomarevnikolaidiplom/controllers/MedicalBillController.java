@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/medical-bill")
+@RequestMapping("/api/v1/medicalbill")
 public class MedicalBillController {
 
    final MedicalBillService medicalBillService;
@@ -27,7 +27,7 @@ public class MedicalBillController {
         return ResponseEntity.ok().body(medicalBillService.getMedicalBill(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<String> saveMedicalBill(@RequestBody MedicalBillRequest request){
+    public ResponseEntity<MedicalBillResponce> saveMedicalBill(@RequestBody MedicalBillRequest request){
         return ResponseEntity.ok().body(medicalBillService.saveMedicalBill(request));
     }
 
@@ -42,12 +42,12 @@ public class MedicalBillController {
 
         return ResponseEntity.ok().body(medicalBillService.deleteMedicalBill(request.getId()));
     }
-    @PostMapping("/add-specialization")
+    @PostMapping("/addspecialization")
     public ResponseEntity<String> addSpecializationToMedicalBill(@RequestBody DtoId dtoId){
         return ResponseEntity.ok().body(medicalBillService.addSpecializationToMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
     }
-    @DeleteMapping("/delete-specialization")
-    public ResponseEntity<String> deleteSpecializationFromDoctor(@RequestBody DtoId dtoId){
+    @DeleteMapping("/deletespecialization")
+    public ResponseEntity<String> deleteSpecializationFromMedicalBill(@RequestBody DtoId dtoId){
         return ResponseEntity.ok().body(medicalBillService.deleteSpecializationFromMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
     }
 
