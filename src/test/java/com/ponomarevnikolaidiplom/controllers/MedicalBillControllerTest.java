@@ -155,7 +155,7 @@ class MedicalBillControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String responce2 =result2.getResponse().getContentAsString();
-        JSONObject jsonObj2= new JSONObject(responce);
+        JSONObject jsonObj2= new JSONObject(responce2);
         String idMedicalBill= jsonObj2.getString("id");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/medicalbill/addspecialization")
