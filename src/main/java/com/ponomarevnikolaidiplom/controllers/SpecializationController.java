@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Service
+@RestController
 @RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/v1/specialization")
 public class SpecializationController {
 
     final SpecializationService specializationService;
@@ -28,7 +28,7 @@ public class SpecializationController {
         return ResponseEntity.ok().body(specializationService.getSpecialization(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<Specialization> saveSpecialization(@RequestBody SpecializationRequest request){
+    public ResponseEntity<SpecializationResponce> saveSpecialization(@RequestBody SpecializationRequest request){
         return ResponseEntity.ok().body(specializationService.saveSpecialization(request));
     }
 

@@ -7,7 +7,7 @@ import com.ponomarevnikolaidiplom.entities.Specialization;
 import java.util.List;
 
 public interface SpecializationService {
-    Specialization saveSpecialization(SpecializationRequest request);
+    SpecializationResponce saveSpecialization(SpecializationRequest request);
 
     SpecializationResponce getSpecialization(Long id);
 

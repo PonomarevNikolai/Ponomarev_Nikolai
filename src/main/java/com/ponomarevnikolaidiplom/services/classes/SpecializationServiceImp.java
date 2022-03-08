@@ -22,9 +22,9 @@ public class SpecializationServiceImp implements SpecializationService {
     final SpecializationRepository specializationRepository;
 
     @Override
-    public Specialization saveSpecialization(SpecializationRequest request) {
+    public SpecializationResponce saveSpecialization(SpecializationRequest request) {
         log.info("new Specialization added");
-        return specializationRepository.save(convertRequestToSpecialization(request));
+        return convertSpecializationToSpecializationResponce(specializationRepository.save(convertRequestToSpecialization(request)));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class SpecializationServiceImp implements SpecializationService {
     public String deleteSpecialization(Long id) {
         log.info("deleted Specialization id={}", id);
         specializationRepository.deleteById(id);
-        return "удален Пациент с id=" + id;
+        return "удалена Специализация с id=" + id;
     }
 
     private Specialization convertRequestToSpecialization(SpecializationRequest request) {
