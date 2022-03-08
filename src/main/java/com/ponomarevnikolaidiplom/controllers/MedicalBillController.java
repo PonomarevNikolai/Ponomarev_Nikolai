@@ -1,8 +1,8 @@
 package com.ponomarevnikolaidiplom.controllers;
 
+import com.ponomarevnikolaidiplom.dto.DtoId;
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.dto.responce.MedicalBillResponce;
-import com.ponomarevnikolaidiplom.entities.MedicalBill;
 import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +41,14 @@ public class MedicalBillController {
     public ResponseEntity<String> deleteMedicalBill(@RequestBody MedicalBillRequest request) {
 
         return ResponseEntity.ok().body(medicalBillService.deleteMedicalBill(request.getId()));
+    }
+    @PostMapping("/add-specialization")
+    public ResponseEntity<String> addSpecializationToMedicalBill(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(medicalBillService.addSpecializationToMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
+    }
+    @DeleteMapping("/delete-specialization")
+    public ResponseEntity<String> deleteSpecializationFromDoctor(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(medicalBillService.deleteSpecializationFromMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
     }
 
 }

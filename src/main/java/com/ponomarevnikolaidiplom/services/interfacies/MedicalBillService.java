@@ -9,8 +9,16 @@ import java.util.List;
 public interface MedicalBillService {
 
     String saveMedicalBill(MedicalBillRequest request);
+
     MedicalBillResponce getMedicalBill(Long id);
+
     List<MedicalBillResponce> getAllMedicalBills();
+
     String updateMedicalBill(MedicalBillRequest request);
+
     String deleteMedicalBill(Long id);
+
+    String addSpecializationToMedicalBill(Long idSpecialization, Long idMedicalBill);
+
+    String deleteSpecializationFromMedicalBill(Long idSpecialization, Long idMedicalBill);
 }

@@ -11,6 +11,7 @@ public class SpecializationResponce {
     private Long id;
     private String name;
     private List<DoctorResponce> doctorList;
+    private List<MedicalBillResponce> medicalBillResponceList;
 
     public SpecializationResponce(Long id, String name) {
         this.id = id;

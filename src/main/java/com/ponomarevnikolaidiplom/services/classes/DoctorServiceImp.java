@@ -4,7 +4,9 @@ import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Doctor;
+import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
+import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.util.List;
 public class DoctorServiceImp implements DoctorService {
 
     final DoctorRepository doctorRepository;
+    final SpecializationRepository specializationRepository;
 
     @Override
     public String saveDoctor(DoctorRequest doctorRequest) {
@@ -65,6 +68,41 @@ public class DoctorServiceImp implements DoctorService {
         doctorRepository.deleteById(id);
         return "Доктор удален id="+id;
     }
+
+    @Override
+    public String addSpecializationToDoctor(Long idSpecialization, Long idDoctor) {
+        Doctor doctor=doctorRepository.findDoctorById(idDoctor);
+        Specialization specialization=specializationRepository.getById(idSpecialization);
+        if(doctor==null){
+            throw new RuntimeException("Doctor not found");
+        }
+        if(specialization==null){
+            throw new RuntimeException("Specialization not found");
+        }
+        doctor.getSpecializationList().add(specialization);
+        specialization.getDoctorList().add(doctor);
+        doctorRepository.saveAndFlush(doctor);
+        specializationRepository.saveAndFlush(specialization);
+        return "Specialization name = "+specialization.getName()+" added to Doctor name="+doctor.getName();
+    }
+
+    @Override
+    public String deleteSpecializationFromDoctor(Long idSpecialization, Long idDoctor) {
+        Doctor doctor=doctorRepository.findDoctorById(idDoctor);
+        Specialization specialization=specializationRepository.getById(idSpecialization);
+        if(doctor==null){
+            throw new RuntimeException("Doctor not found");
+        }
+        if(specialization==null){
+            throw new RuntimeException("Specialization not found");
+        }
+        specialization.getDoctorList().remove(doctor);
+        doctor.getSpecializationList().remove(specialization);
+        doctorRepository.saveAndFlush(doctor);
+        specializationRepository.saveAndFlush(specialization);
+        return "Specialization name = "+specialization.getName()+" deleted from Doctor name="+doctor.getName();
+    }
+
 
     private Doctor convertRequestToDoctor(DoctorRequest request) {
 

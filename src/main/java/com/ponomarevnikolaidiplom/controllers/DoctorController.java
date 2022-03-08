@@ -1,5 +1,6 @@
 package com.ponomarevnikolaidiplom.controllers;
 
+import com.ponomarevnikolaidiplom.dto.DtoId;
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.entities.Doctor;
@@ -39,6 +40,14 @@ public class DoctorController {
     @DeleteMapping ("/delete")
     public ResponseEntity<String> deleteDoctor(@RequestBody DoctorRequest request) {
         return ResponseEntity.ok().body(doctorService.deleteDoctor(request.getId()));
+    }
+    @PostMapping("/add-specialization")
+    public ResponseEntity<String> addSpecializationToDoctor(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(doctorService.addSpecializationToDoctor(dtoId.getIdSpecilization(), dtoId.getIdDoctor()));
+    }
+    @DeleteMapping("/delete-specialization")
+    public ResponseEntity<String> deleteSpecializationFromDoctor(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(doctorService.deleteSpecializationFromDoctor(dtoId.getIdSpecilization(), dtoId.getIdDoctor()));
     }
 }
 

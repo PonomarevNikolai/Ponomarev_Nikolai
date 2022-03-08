@@ -18,5 +18,8 @@ public class Specialization {
     private String name;
     @ManyToMany
     private List<Doctor> doctorList;
+    @ManyToMany
+    private List<MedicalBill> medicalBillList;
+
 
 }
