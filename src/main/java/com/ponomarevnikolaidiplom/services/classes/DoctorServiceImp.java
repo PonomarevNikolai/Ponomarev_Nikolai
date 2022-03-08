@@ -2,7 +2,6 @@ package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
-import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.Specialization;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
