@@ -19,4 +19,8 @@ public interface DoctorService {
     String addSpecializationToDoctor(Long idSpecialization, Long idDoctor);
 
     String deleteSpecializationFromDoctor(Long idSpecialization, Long idDoctor);
+
+    String addDistrictToDoctror(Long idDistrict, Long idDoctor);
+
+    String deleteDistrictToDoctror(Long idDistrict, Long idDoctor);
 }

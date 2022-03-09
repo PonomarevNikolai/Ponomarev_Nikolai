@@ -8,4 +8,5 @@ public class DtoId {
     private Long idSpecilization;
     private Long idPatient;
     private Long idMedicalBill;
+    private Long idDistrict;
 }

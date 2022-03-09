@@ -48,5 +48,14 @@ public class DoctorController {
     public ResponseEntity<String> deleteSpecializationFromDoctor(@RequestBody DtoId dtoId){
         return ResponseEntity.ok().body(doctorService.deleteSpecializationFromDoctor(dtoId.getIdSpecilization(), dtoId.getIdDoctor()));
     }
+
+    @PostMapping("/adddistrict")
+    public ResponseEntity<String> addDistrictToDoctor(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(doctorService.addDistrictToDoctror(dtoId.getIdDistrict(), dtoId.getIdDoctor()));
+    }
+    @DeleteMapping("/deletedistrict")
+    public ResponseEntity<String> deleteDistrictFromDoctor(@RequestBody DtoId dtoId){
+        return ResponseEntity.ok().body(doctorService.deleteDistrictToDoctror(dtoId.getIdDistrict(), dtoId.getIdDoctor()));
+    }
 }
 

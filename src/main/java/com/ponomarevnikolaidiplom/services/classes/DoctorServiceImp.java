@@ -2,8 +2,10 @@ package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
+import com.ponomarevnikolaidiplom.entities.District;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.Specialization;
+import com.ponomarevnikolaidiplom.repozitories.DistrictRepository;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
@@ -21,6 +23,7 @@ public class DoctorServiceImp implements DoctorService {
 
     final DoctorRepository doctorRepository;
     final SpecializationRepository specializationRepository;
+    final DistrictRepository districtRepository;
 
     @Override
     public DoctorResponce saveDoctor(DoctorRequest doctorRequest) {
@@ -104,18 +107,59 @@ public class DoctorServiceImp implements DoctorService {
         return "deleted Specialization name = "+specialization.getName()+" from Doctor name="+doctor.getName();
     }
 
+    @Override
+    public String addDistrictToDoctror(Long idDistrict, Long idDoctor) {
+        Doctor doctor=doctorRepository.findDoctorById(idDoctor);
+        District district=districtRepository.getById(idDistrict);
+        if(doctor==null){
+            throw new RuntimeException("Doctor not found");
+        }
+        if(district==null){
+            throw new RuntimeException("district not found");
+        }
+        doctor.setDistrict(district);
+        district.setDistrictDoctor(doctor);
+        doctorRepository.saveAndFlush(doctor);
+        districtRepository.saveAndFlush(district);
+        log.info("added District name ={} to Doctor name={}", district.getName(), doctor.getName());
+        return "District name = "+district.getName()+" added to Doctor name="+doctor.getName();
+    }
+
+    @Override
+    public String deleteDistrictToDoctror(Long idDistrict, Long idDoctor) {
+        Doctor doctor=doctorRepository.findDoctorById(idDoctor);
+        District district=districtRepository.getById(idDistrict);
+        if(doctor==null){
+            throw new RuntimeException("Doctor not found");
+        }
+        if(district==null){
+            throw new RuntimeException("District not found");
+        }
+        doctor.setDistrict(null);
+        district.setDistrictDoctor(null);
+        doctorRepository.saveAndFlush(doctor);
+        districtRepository.saveAndFlush(district);
+        log.info("deleted District name ={} from Doctor name={}", district.getName(), doctor.getName());
+        return "deleted District name = "+district.getName()+" from Doctor name="+doctor.getName();
+    }
+
 
     private Doctor convertRequestToDoctor(DoctorRequest request) {
 
-        return new Doctor(request.getId(), request.getName(), new ArrayList<>());
+        return new Doctor(request.getId(), request.getName(), new ArrayList<>(),null);
     }
     private DoctorResponce convertDoctorToDoctorResponce(Doctor responce) {
         List<String> specializationList=new ArrayList<>();
+        String distName="not added";
+        if (responce.getDistrict()!=null){
+            distName=responce.getDistrict().getName();
+        }
         responce.getSpecializationList().forEach(specialization ->
             specializationList.add("id = "+specialization.getId()+", name = "+specialization.getName()));
         return new DoctorResponce(responce.getId(),
                 responce.getName(),
-                specializationList);
+                specializationList,
+                distName);
     }
 
 }
