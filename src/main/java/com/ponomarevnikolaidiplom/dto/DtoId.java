@@ -9,4 +9,5 @@ public class DtoId {
     private Long idPatient;
     private Long idMedicalBill;
     private Long idDistrict;
+    private Long idAppointment;
 }

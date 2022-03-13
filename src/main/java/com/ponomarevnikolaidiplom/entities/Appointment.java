@@ -5,23 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Doctor {
+public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Specialization> specializationList;
-    @OneToOne
-    private District district;
-    @OneToMany
-    private List<Appointment> appointmentList;
+    @ManyToOne
+    private Patient patient;
 
+    @ManyToOne
+    private Doctor doctor;
+
+    private Date dateAndTimeOfAppointment;
 }

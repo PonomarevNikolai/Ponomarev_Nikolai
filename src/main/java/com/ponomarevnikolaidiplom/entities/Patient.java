@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,4 +22,6 @@ public class Patient {
     private String name;
     private String phoneNumber;
     private String address;
+    @OneToMany
+    private List<Appointment> appointmentList;
 }

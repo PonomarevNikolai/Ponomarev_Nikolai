@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +16,5 @@ public class District {
     private Long id;
     private String name;
     @OneToOne
-    private Doctor DistrictDoctor;
+    private Doctor districtDoctor;
 }

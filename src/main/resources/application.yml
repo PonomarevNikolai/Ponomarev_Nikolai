@@ -11,3 +11,11 @@ spring:
     password: postgres
   flyway:
     baseline-on-migrate: true
+
+workTime:
+  #Hour
+  start: 8
+  #Hour
+  end: 17
+  #Minute
+  step: 15

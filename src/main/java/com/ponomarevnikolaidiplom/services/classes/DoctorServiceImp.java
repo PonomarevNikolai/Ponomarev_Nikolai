@@ -1,6 +1,7 @@
 package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
+import com.ponomarevnikolaidiplom.dto.responce.AppointmentResponce;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.entities.District;
 import com.ponomarevnikolaidiplom.entities.Doctor;
@@ -146,20 +147,25 @@ public class DoctorServiceImp implements DoctorService {
 
     private Doctor convertRequestToDoctor(DoctorRequest request) {
 
-        return new Doctor(request.getId(), request.getName(), new ArrayList<>(),null);
+        return new Doctor(request.getId(), request.getName(), new ArrayList<>(),null,new ArrayList<>());
     }
     private DoctorResponce convertDoctorToDoctorResponce(Doctor responce) {
         List<String> specializationList=new ArrayList<>();
+        List<String> appointmentStringList=new ArrayList<>();
         String distName="not added";
         if (responce.getDistrict()!=null){
             distName=responce.getDistrict().getName();
         }
         responce.getSpecializationList().forEach(specialization ->
             specializationList.add("id = "+specialization.getId()+", name = "+specialization.getName()));
+        responce.getAppointmentList().forEach(appointment -> appointmentStringList.add("id="+appointment.getId()
+                +", patient id=" +appointment.getPatient().getId()
+                +", date="+appointment.getDateAndTimeOfAppointment()));
         return new DoctorResponce(responce.getId(),
                 responce.getName(),
                 specializationList,
-                distName);
+                distName,
+                appointmentStringList);
     }
 
 }

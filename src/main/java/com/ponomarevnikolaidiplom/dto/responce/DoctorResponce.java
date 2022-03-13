@@ -13,9 +13,6 @@ public class DoctorResponce {
     private String name;
     private List<String> nameOfSpecializationList;
     private String districtName;
+    private List<String> appointmentStringList;
 
-    public DoctorResponce(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

@@ -3,6 +3,9 @@ package com.ponomarevnikolaidiplom.dto.responce;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class PatientResponce {
@@ -12,4 +15,5 @@ public class PatientResponce {
     private String name;
     private String phoneNumber;
     private String address;
+    private List<String> appointmentStringList;
 }

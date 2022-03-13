@@ -78,14 +78,19 @@ public class PatientServiceImp implements PatientService {
                 request.getNumberOfInsurance(),
                 request.getName(),
                 request.getPhoneNumber(),
-                request.getAddress());
+                request.getAddress(),
+                new ArrayList<>());
     }
     private PatientResponce convertPatientToPatientResponce(Patient responce) {
-
+        List<String> appointmentStringList=new ArrayList<>();
+        responce.getAppointmentList().forEach(appointment -> appointmentStringList.add("id="+appointment.getId()
+                +", patient id=" +appointment.getPatient().getId()
+                +", date="+appointment.getDateAndTimeOfAppointment()));
         return new PatientResponce(responce.getId(),
                 responce.getNumberOfInsurance(),
                 responce.getName(),
                 responce.getPhoneNumber(),
-                responce.getAddress());
+                responce.getAddress(),
+                appointmentStringList);
     }
 }
