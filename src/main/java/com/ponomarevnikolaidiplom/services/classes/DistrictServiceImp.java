@@ -21,8 +21,9 @@ public class DistrictServiceImp implements DistrictService {
 
     @Override
     public DistrictResponce saveDistrict(DistrictRequest request) {
+        District district=districtRepository.save(convertRequestToDistrict(request));
         log.info("new District added");
-        return convertDistrictToDistrictResponce(districtRepository.save(convertRequestToDistrict(request)));
+        return convertDistrictToDistrictResponce(district);
 
     }
 
@@ -59,7 +60,7 @@ public class DistrictServiceImp implements DistrictService {
     public String deleteDistrict(Long id) {
         log.info("deleted District id={}", id);
         districtRepository.deleteById(id);
-        return "удален Участок с id=" + id;
+        return "deleted District id=" + id;
     }
 
     private District convertRequestToDistrict(DistrictRequest request) {
@@ -69,8 +70,12 @@ public class DistrictServiceImp implements DistrictService {
     }
 
     private DistrictResponce convertDistrictToDistrictResponce(District responce) {
+        String doctorName="Not assigned";
+        if(responce.getDistrictDoctor()!=null){
+            doctorName=responce.getDistrictDoctor().getName();
+        }
         return new DistrictResponce(responce.getId(),
                 responce.getName(),
-                responce.getDistrictDoctor().getName());
+               doctorName );
     }
 }

@@ -1,7 +1,6 @@
 package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.DistrictRequest;
-import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DistrictResponce;
 import com.ponomarevnikolaidiplom.services.interfacies.DistrictService;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +25,18 @@ final DistrictService districtService;
         return ResponseEntity.ok().body(districtService.getDistrict(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<DistrictResponce> saveSpecialization(@RequestBody DistrictRequest request){
+    public ResponseEntity<DistrictResponce> saveDistrict(@RequestBody DistrictRequest request){
         return ResponseEntity.ok().body(districtService.saveDistrict(request));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateSpecialization(@RequestBody DistrictRequest request){
+    public ResponseEntity<String> updateDistrict(@RequestBody DistrictRequest request){
 
         return ResponseEntity.ok().body(districtService.updateDistrict(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deleteSpecialization(@RequestBody SpecializationRequest request) {
+    public ResponseEntity<String> deleteDistrict(@RequestBody DistrictRequest request) {
         return ResponseEntity.ok().body(districtService.deleteDistrict(request.getId()));
     }
 }
