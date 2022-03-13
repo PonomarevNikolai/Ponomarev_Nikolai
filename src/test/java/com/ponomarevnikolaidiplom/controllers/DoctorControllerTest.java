@@ -134,6 +134,7 @@ class DoctorControllerTest {
 
     }
 
+
     @Test
     void deleteSpecializationFromDoctor() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/specialization/save")
