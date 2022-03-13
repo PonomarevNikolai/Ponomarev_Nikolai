@@ -1,5 +1,7 @@
 package com.ponomarevnikolaidiplom.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ class DoctorControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper=new ObjectMapper();
 
     @Test
     void getAllDoctors() throws Exception {
@@ -38,8 +42,8 @@ class DoctorControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String responce = result.getResponse().getContentAsString();
-        JSONObject jsonObj = new JSONObject(responce);
-        String id = jsonObj.getString("id");
+        DoctorResponce doctorResponce= objectMapper.readValue(responce,DoctorResponce.class);
+        Long id = doctorResponce.getId();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/doctor/" + id))
                 .andExpect(MockMvcResultMatchers.jsonPath("name").value("Petrov Vasiliy Victorovich"));
     }
@@ -59,6 +63,7 @@ class DoctorControllerTest {
 
     @Test
     void updateDoctor() throws Exception {
+
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/doctor/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":" + null + ",\"name\":\"Petrov Vasiliy Victorovich\"}")
@@ -67,8 +72,8 @@ class DoctorControllerTest {
                 .andReturn();
         String responce = result.getResponse().getContentAsString();
 
-        JSONObject jsonObj = new JSONObject(responce);
-        String id = jsonObj.getString("id");
+        DoctorResponce doctorResponce= objectMapper.readValue(responce,DoctorResponce.class);
+        Long id = doctorResponce.getId();
         MvcResult result2 = mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/doctor/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":" + id + ",\"name\":\"Korsakova Svetlana Vladimirovna\"}")
@@ -88,8 +93,8 @@ class DoctorControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String responce = result.getResponse().getContentAsString();
-        JSONObject jsonObj = new JSONObject(responce);
-        String id = jsonObj.getString("id");
+        DoctorResponce doctorResponce= objectMapper.readValue(responce,DoctorResponce.class);
+        Long id = doctorResponce.getId();
         MvcResult result2 = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/doctor/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":" + id + "}")

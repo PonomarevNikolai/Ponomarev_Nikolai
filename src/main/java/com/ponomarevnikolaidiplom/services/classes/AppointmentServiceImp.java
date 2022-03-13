@@ -49,6 +49,7 @@ public class AppointmentServiceImp implements AppointmentService {
         patient.getAppointmentList().add(appointment);
         doctorRepository.saveAndFlush(doctor);
         patientRepository.saveAndFlush(patient);
+        log.info("Appointment added patient name={} doctor name={} date={}", patient.getName(), doctor.getName(), appointment.getDateAndTimeOfAppointment());
         return convertAppointmentToResponce(appointment);
     }
 
@@ -71,25 +72,30 @@ public class AppointmentServiceImp implements AppointmentService {
     @Override
     public String updateAppointment(AppointmentRequest request) {
         Appointment update = appointmentRepository.getById(request.getId());
-        Patient patient = patientRepository.getById(request.getIdPatient());
-        Doctor doctor = doctorRepository.findDoctorById(request.getIdDoctor());
         Date dateAndTimeOfAppointment = null;
-        Doctor oldDoctor = update.getDoctor();
-        Patient oldPatient = update.getPatient();
-        Appointment updateOld = update;
+
         if (update == null) {
             throw new RuntimeException("Appointment not found");
         }
-        if (doctor != null) {
+
+        Appointment updateOld = update;
+        Doctor oldDoctor = update.getDoctor();
+        Patient oldPatient = update.getPatient();
+
+        if (request.getIdDoctor() != null) {
+            Doctor doctor = doctorRepository.findDoctorById(request.getIdDoctor());
             oldDoctor.getAppointmentList().remove(updateOld);
             doctorRepository.saveAndFlush(oldDoctor);
             update.setDoctor(doctor);
         }
-        if (patient != null) {
+
+        if (request.getIdPatient() != null) {
+            Patient patient = patientRepository.getById(request.getIdPatient());
             oldPatient.getAppointmentList().remove(updateOld);
             patientRepository.saveAndFlush(oldPatient);
             update.setPatient(patient);
         }
+
         if (request.getDateAndTimeOfAppointment() != null) {
             try {
                 dateAndTimeOfAppointment = new SimpleDateFormat(pattern).parse(request.getDateAndTimeOfAppointment());
@@ -99,6 +105,7 @@ public class AppointmentServiceImp implements AppointmentService {
             }
             update.setDateAndTimeOfAppointment(dateAndTimeOfAppointment);
         }
+
         appointmentRepository.saveAndFlush(update);
 
         return "Appointment id=" + update.getId() + " updated";
