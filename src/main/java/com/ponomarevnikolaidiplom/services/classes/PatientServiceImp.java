@@ -3,6 +3,8 @@ package com.ponomarevnikolaidiplom.services.classes;
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
 import com.ponomarevnikolaidiplom.dto.responce.PatientResponce;
 import com.ponomarevnikolaidiplom.entities.Patient;
+import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.PatientRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +22,23 @@ public class PatientServiceImp implements PatientService {
 
     final PatientRepository patientRepository;
 
-    public PatientResponce savePatient(PatientRequest request) {
+    public PatientResponce savePatient(PatientRequest request) throws ServiceException {
+        if (request.getNumberOfInsurance()==null) {
+            throw new ServiceException("Patient number of insurance not fill", TypicalError.BAD_REQUEST);
+        }
+        if (request.getName()==null) {
+            throw new ServiceException("Patient name not fill", TypicalError.BAD_REQUEST);
+        }
         log.info("new Patient added name={}",request.getName());
         return convertPatientToPatientResponce(patientRepository.save(convertRequestToPatient(request)));
     }
 
     @Override
-    public PatientResponce getPatient(Long id) {
+    public PatientResponce getPatient(Long id) throws ServiceException {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) {
+            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+        }
         log.info("get Patient by id");
         return convertPatientToPatientResponce(patientRepository.getById(id));
     }
@@ -39,11 +52,12 @@ public class PatientServiceImp implements PatientService {
     }
 
     @Override
-    public String updatePatient(PatientRequest request) {
-        Patient update = patientRepository.getById(request.getId());
-        if (update == null) {
-            throw new RuntimeException("Patient not found");
+    public String updatePatient(PatientRequest request) throws ServiceException {
+        Optional<Patient> patient = patientRepository.findById(request.getId());
+        if (patient.isEmpty()) {
+            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
         }
+        Patient update = patientRepository.getById(request.getId());
         if (request.getName() != null) {
             update.setName(request.getName());
         }
@@ -66,7 +80,11 @@ public class PatientServiceImp implements PatientService {
     }
 
     @Override
-    public void deletePatient(Long id) {
+    public void deletePatient(Long id) throws ServiceException {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if (patient.isEmpty()) {
+            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+        }
         log.info("deleted Patient id={}", id);
         patientRepository.deleteById(id);
 

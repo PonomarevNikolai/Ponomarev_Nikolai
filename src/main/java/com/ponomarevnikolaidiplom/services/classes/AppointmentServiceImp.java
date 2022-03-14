@@ -5,6 +5,8 @@ import com.ponomarevnikolaidiplom.dto.responce.AppointmentResponce;
 import com.ponomarevnikolaidiplom.entities.Appointment;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.Patient;
+import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.AppointmentRepository;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
 import com.ponomarevnikolaidiplom.repozitories.PatientRepository;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,21 +33,44 @@ public class AppointmentServiceImp implements AppointmentService {
     private static final String pattern = "dd.MM.yyyy hh:mm";
 
     @Override
-    public AppointmentResponce saveAppointment(AppointmentRequest request) {
+    public AppointmentResponce saveAppointment(AppointmentRequest request) throws ServiceException{
+        Optional<Doctor> doctorOptional = doctorRepository.findById(request.getIdDoctor());
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<Patient> patientOptional = patientRepository.findById(request.getIdPatient());
+        if (patientOptional.isEmpty()) {
+            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+        }
         Appointment appointment = appointmentRepository.save(convertRequestToAppointment(request));
         Date dateOfAppointment = appointment.getDateAndTimeOfAppointment();
         Doctor doctor = doctorRepository.findDoctorById(request.getIdDoctor());
         Patient patient = patientRepository.getById(request.getIdPatient());
         doctor.getAppointmentList().forEach(appointment1 -> {
             if (appointment1.getDateAndTimeOfAppointment().compareTo(dateOfAppointment) == 0) {
-                throw new RuntimeException("This doctor appointment time closed");
+                try {
+                    throw new ServiceException("This doctor appointment time closed", TypicalError.BAD_REQUEST);
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
+
         patient.getAppointmentList().forEach(appointment1 -> {
             if (appointment1.getDateAndTimeOfAppointment().compareTo(dateOfAppointment) == 0) {
-                throw new RuntimeException("This patient appointment time closed");
+                try {
+                    throw  new ServiceException("This patient appointment time closed", TypicalError.BAD_REQUEST);
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
+
         doctor.getAppointmentList().add(appointment);
         patient.getAppointmentList().add(appointment);
         doctorRepository.saveAndFlush(doctor);
@@ -54,11 +80,15 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    public AppointmentResponce getAppointment(Long id) {
-        Appointment appointment = appointmentRepository.getById(id);
-        if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+    public AppointmentResponce getAppointment(Long id) throws ServiceException {
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if (appointmentOptional.isEmpty()) {
+            throw new ServiceException("Appointment not found", TypicalError.NOT_FOUND);
         }
+
+        Appointment appointment = appointmentRepository.getById(id);
+
         return convertAppointmentToResponce(appointment);
     }
 
@@ -70,13 +100,17 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    public String updateAppointment(AppointmentRequest request) {
+    public String updateAppointment(AppointmentRequest request) throws ServiceException {
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(request.getId());
+
+        if (appointmentOptional.isEmpty()) {
+            throw new ServiceException("Appointment not found", TypicalError.NOT_FOUND);
+        }
+
         Appointment update = appointmentRepository.getById(request.getId());
         Date dateAndTimeOfAppointment = null;
 
-        if (update == null) {
-            throw new RuntimeException("Appointment not found");
-        }
+
 
         Appointment updateOld = update;
         Doctor oldDoctor = update.getDoctor();
@@ -100,8 +134,8 @@ public class AppointmentServiceImp implements AppointmentService {
             try {
                 dateAndTimeOfAppointment = new SimpleDateFormat(pattern).parse(request.getDateAndTimeOfAppointment());
             } catch (ParseException e) {
-                //todo Fix exception
-                e.printStackTrace();
+
+                throw new ServiceException("Wrong date and time format want be "+pattern, TypicalError.BAD_REQUEST);
             }
             update.setDateAndTimeOfAppointment(dateAndTimeOfAppointment);
         }
@@ -112,7 +146,12 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    public String deleteAppointment(Long id) {
+    public String deleteAppointment(Long id) throws ServiceException {
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if (appointmentOptional.isEmpty()) {
+            throw new ServiceException("Appointment not found", TypicalError.NOT_FOUND);
+        }
         Appointment request = appointmentRepository.getById(id);
         Patient patient = request.getPatient();
         Doctor doctor = request.getDoctor();
@@ -124,21 +163,25 @@ public class AppointmentServiceImp implements AppointmentService {
         return "Appointment id=" + id + " deleted";
     }
 
-    private Appointment convertRequestToAppointment(AppointmentRequest request) {
+    private Appointment convertRequestToAppointment(AppointmentRequest request) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(request.getIdDoctor());
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<Patient> patientOptional = patientRepository.findById(request.getIdPatient());
+        if (patientOptional.isEmpty()) {
+            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+        }
         Doctor doctor = doctorRepository.findDoctorById(request.getIdDoctor());
         Patient patient = patientRepository.getById(request.getIdPatient());
-        if (doctor == null) {
-            throw new RuntimeException("Doctor not found");
-        }
-        if (patient == null) {
-            throw new RuntimeException("Patient not found");
-        }
         Date dateAndTimeOfAppointment = null;
         try {
             dateAndTimeOfAppointment = new SimpleDateFormat(pattern).parse(request.getDateAndTimeOfAppointment());
         } catch (ParseException e) {
-            //todo Fix exception
-            e.printStackTrace();
+            throw new ServiceException("Wrong date and time format want be "+pattern, TypicalError.BAD_REQUEST);
+
         }
 
         return new Appointment(request.getId(), patient, doctor, dateAndTimeOfAppointment);

@@ -2,6 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.AppointmentRequest;
 import com.ponomarevnikolaidiplom.dto.responce.AppointmentResponce;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.services.interfacies.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,22 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointmentService.getAllAppointment());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<AppointmentResponce> getAppointment(@PathVariable @RequestBody Long id){
+    public ResponseEntity<AppointmentResponce> getAppointment(@PathVariable @RequestBody Long id) throws ServiceException {
         return ResponseEntity.ok().body(appointmentService.getAppointment(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<AppointmentResponce> saveAppointment(@RequestBody AppointmentRequest request){
+    public ResponseEntity<AppointmentResponce> saveAppointment(@RequestBody AppointmentRequest request) throws ServiceException {
         return ResponseEntity.ok().body(appointmentService.saveAppointment(request));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateAppointment(@RequestBody AppointmentRequest request){
+    public ResponseEntity<String> updateAppointment(@RequestBody AppointmentRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(appointmentService.updateAppointment(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deleteAppointment(@RequestBody AppointmentRequest request) {
+    public ResponseEntity<String> deleteAppointment(@RequestBody AppointmentRequest request) throws ServiceException {
         return ResponseEntity.ok().body(appointmentService.deleteAppointment(request.getId()));
     }
 }

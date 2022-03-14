@@ -3,6 +3,8 @@ package com.ponomarevnikolaidiplom.services.classes;
 import com.ponomarevnikolaidiplom.dto.request.DistrictRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DistrictResponce;
 import com.ponomarevnikolaidiplom.entities.District;
+import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.DistrictRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.DistrictService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,12 @@ public class DistrictServiceImp implements DistrictService {
     }
 
     @Override
-    public DistrictResponce getDistrict(Long id) {
+    public DistrictResponce getDistrict(Long id) throws ServiceException {
+        Optional<District> districtOptional = districtRepository.findById(id);
+
+        if (districtOptional.isEmpty()) {
+            throw new ServiceException("District not found", TypicalError.NOT_FOUND);
+        }
         log.info("get District by id={}", id);
         return convertDistrictToDistrictResponce(districtRepository.getById(id));
     }
@@ -43,12 +51,18 @@ public class DistrictServiceImp implements DistrictService {
     }
 
     @Override
-    public String updateDistrict(DistrictRequest request) {
-        District update = districtRepository.getById(request.getId());
-        if (update == null) {
-            throw new RuntimeException("District not found");
+    public String updateDistrict(DistrictRequest request) throws ServiceException {
+
+        Optional<District> districtOptional = districtRepository.findById(request.getId());
+
+        if (districtOptional.isEmpty()) {
+            throw new ServiceException("District not found", TypicalError.NOT_FOUND);
         }
-        if (request.getName() != null) {
+        District update = districtRepository.getById(request.getId());
+
+        if (request.getName() == null) {
+            throw new ServiceException("Nothing change", TypicalError.BAD_REQUEST);
+        }else{
             update.setName(request.getName());
         }
         districtRepository.saveAndFlush(update);
@@ -57,7 +71,12 @@ public class DistrictServiceImp implements DistrictService {
     }
 
     @Override
-    public String deleteDistrict(Long id) {
+    public String deleteDistrict(Long id) throws ServiceException {
+        Optional<District> districtOptional = districtRepository.findById(id);
+
+        if (districtOptional.isEmpty()) {
+            throw new ServiceException("District not found", TypicalError.NOT_FOUND);
+        }
         log.info("deleted District id={}", id);
         districtRepository.deleteById(id);
         return "deleted District id=" + id;

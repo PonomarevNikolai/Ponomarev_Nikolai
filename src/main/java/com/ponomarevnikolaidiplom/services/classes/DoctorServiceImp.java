@@ -1,11 +1,12 @@
 package com.ponomarevnikolaidiplom.services.classes;
 
 import com.ponomarevnikolaidiplom.dto.request.DoctorRequest;
-import com.ponomarevnikolaidiplom.dto.responce.AppointmentResponce;
 import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.entities.District;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.Specialization;
+import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.DistrictRepository;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,13 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public DoctorResponce getDoctor(Long id) {
+    public DoctorResponce getDoctor(Long id) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(id);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
         log.info("get Doctor by id={}", id);
         return convertDoctorToDoctorResponce(doctorRepository.findDoctorById(id));
 
@@ -51,12 +59,16 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public String updateDoctor(DoctorRequest request) {
-        Doctor update = doctorRepository.findDoctorById(request.getId());
-        if (update == null) {
-            throw new RuntimeException("Doctor not found");
+    public String updateDoctor(DoctorRequest request) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(request.getId());
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
         }
-        if (request.getName() != null) {
+        Doctor update = doctorRepository.findDoctorById(request.getId());
+        if (request.getName() == null) {
+            throw new ServiceException("Nothing change", TypicalError.BAD_REQUEST);
+        } else {
             update.setName(request.getName());
         }
 
@@ -66,22 +78,32 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public String deleteDoctor(Long id) {
+    public String deleteDoctor(Long id) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(id);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
         log.info("deleted Doctor id={} ", id);
         doctorRepository.deleteById(id);
         return "Доктор удален id="+id;
     }
 
     @Override
-    public String addSpecializationToDoctor(Long idSpecialization, Long idDoctor) {
+    public String addSpecializationToDoctor(Long idSpecialization, Long idDoctor) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);
+
+        if (specializationOptional.isEmpty()) {
+            throw new ServiceException("Specialization not found", TypicalError.NOT_FOUND);
+        }
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         Specialization specialization=specializationRepository.getById(idSpecialization);
-        if(doctor==null){
-            throw new RuntimeException("Doctor not found");
-        }
-        if(specialization==null){
-            throw new RuntimeException("Specialization not found");
-        }
         doctor.getSpecializationList().add(specialization);
         specialization.getDoctorList().add(doctor);
         doctorRepository.saveAndFlush(doctor);
@@ -91,15 +113,21 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public String deleteSpecializationFromDoctor(Long idSpecialization, Long idDoctor) {
+    public String deleteSpecializationFromDoctor(Long idSpecialization, Long idDoctor) throws ServiceException {
+
+        Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);
+
+        if (specializationOptional.isEmpty()) {
+            throw new ServiceException("Specialization not found", TypicalError.NOT_FOUND);
+        }
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         Specialization specialization=specializationRepository.getById(idSpecialization);
-        if(doctor==null){
-            throw new RuntimeException("Doctor not found");
-        }
-        if(specialization==null){
-            throw new RuntimeException("Specialization not found");
-        }
         specialization.getDoctorList().remove(doctor);
         doctor.getSpecializationList().remove(specialization);
         doctorRepository.saveAndFlush(doctor);
@@ -109,15 +137,21 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public String addDistrictToDoctror(Long idDistrict, Long idDoctor) {
+    public String addDistrictToDoctror(Long idDistrict, Long idDoctor) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<District> districtOptional = districtRepository.findById(idDistrict);
+
+        if (districtOptional.isEmpty()) {
+            throw new ServiceException("District not found", TypicalError.NOT_FOUND);
+        }
+
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         District district=districtRepository.getById(idDistrict);
-        if(doctor==null){
-            throw new RuntimeException("Doctor not found");
-        }
-        if(district==null){
-            throw new RuntimeException("district not found");
-        }
         doctor.setDistrict(district);
         district.setDistrictDoctor(doctor);
         doctorRepository.saveAndFlush(doctor);
@@ -127,14 +161,24 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public String deleteDistrictToDoctror(Long idDistrict, Long idDoctor) {
+    public String deleteDistrictToDoctror(Long idDistrict, Long idDoctor) throws ServiceException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
+
+        if (doctorOptional.isEmpty()) {
+            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+        }
+
+        Optional<District> districtOptional = districtRepository.findById(idDistrict);
+
+        if (districtOptional.isEmpty()) {
+            throw new ServiceException("District not found", TypicalError.NOT_FOUND);
+        }
+
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         District district=districtRepository.getById(idDistrict);
-        if(doctor==null){
-            throw new RuntimeException("Doctor not found");
-        }
-        if(district==null){
-            throw new RuntimeException("District not found");
+
+        if (doctor.getDistrict().getName()!=district.getName()) {
+            throw new ServiceException("Bad request. Wrong doctor or district", TypicalError.BAD_REQUEST);
         }
         doctor.setDistrict(null);
         district.setDistrictDoctor(null);

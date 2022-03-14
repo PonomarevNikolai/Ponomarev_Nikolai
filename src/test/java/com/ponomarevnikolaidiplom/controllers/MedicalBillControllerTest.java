@@ -97,7 +97,7 @@ class MedicalBillControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         String responce2 =result2.getResponse().getContentAsString();
-        assert(responce2.contains("Услуга удалена id="+id));
+        assertTrue(responce2.contains("deleted MedicalBill id="+id));
     }
 
     @Test

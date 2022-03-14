@@ -2,6 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
 import com.ponomarevnikolaidiplom.dto.responce.PatientResponce;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,22 @@ public class PatientController {
         return ResponseEntity.ok().body(patientService.getAllPatients());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<PatientResponce> getPatient(@PathVariable @RequestBody Long id){
+    public ResponseEntity<PatientResponce> getPatient(@PathVariable @RequestBody Long id) throws ServiceException {
         return ResponseEntity.ok().body(patientService.getPatient(id));
     }
     @PostMapping("/save")
-    public ResponseEntity<PatientResponce> savePatient(@RequestBody PatientRequest request){
+    public ResponseEntity<PatientResponce> savePatient(@RequestBody PatientRequest request) throws ServiceException {
         return ResponseEntity.ok().body(patientService.savePatient(request));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updatePatient(@RequestBody PatientRequest request){
+    public ResponseEntity<String> updatePatient(@RequestBody PatientRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(patientService.updatePatient(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deletePatient(@RequestBody PatientRequest request) {
+    public ResponseEntity<String> deletePatient(@RequestBody PatientRequest request) throws ServiceException {
         patientService.deletePatient(request.getId());
         return ResponseEntity.ok().body("удален Пациент с id="+request.getId());
     }

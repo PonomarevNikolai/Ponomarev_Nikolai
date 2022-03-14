@@ -2,6 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.DistrictRequest;
 import com.ponomarevnikolaidiplom.dto.responce.DistrictResponce;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.services.interfacies.DistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ final DistrictService districtService;
         return ResponseEntity.ok().body(districtService.getAllDistricts());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<DistrictResponce> getDistrict(@PathVariable @RequestBody Long id){
+    public ResponseEntity<DistrictResponce> getDistrict(@PathVariable @RequestBody Long id) throws ServiceException {
         return ResponseEntity.ok().body(districtService.getDistrict(id));
     }
     @PostMapping("/save")
@@ -30,13 +31,13 @@ final DistrictService districtService;
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateDistrict(@RequestBody DistrictRequest request){
+    public ResponseEntity<String> updateDistrict(@RequestBody DistrictRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(districtService.updateDistrict(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deleteDistrict(@RequestBody DistrictRequest request) {
+    public ResponseEntity<String> deleteDistrict(@RequestBody DistrictRequest request) throws ServiceException {
         return ResponseEntity.ok().body(districtService.deleteDistrict(request.getId()));
     }
 }

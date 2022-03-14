@@ -3,6 +3,8 @@ package com.ponomarevnikolaidiplom.services.classes;
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
 import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Specialization;
+import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +29,11 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public SpecializationResponce getSpecialization(Long id) {
+    public SpecializationResponce getSpecialization(Long id) throws ServiceException {
+        Optional<Specialization> specialization= specializationRepository.findById(id);
+        if(specialization.isEmpty()){
+            throw new ServiceException("Specialization not found",TypicalError.NOT_FOUND);
+        }
         log.info("get Specialization by id={}", id);
         return convertSpecializationToSpecializationResponce(specializationRepository.getById(id));
     }
@@ -41,11 +48,15 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public String updateSpecialization(SpecializationRequest request) {
-        Specialization update = specializationRepository.getById(request.getId());
-        if (update == null) {
-            throw new RuntimeException("Specialization not found");
+    public String updateSpecialization(SpecializationRequest request) throws ServiceException {
+        if (request.getId()==null) {
+            throw new ServiceException("Specialization bad request",TypicalError.BAD_REQUEST);
         }
+        Optional<Specialization> specialization = specializationRepository.findById(request.getId());
+        if (specialization.isEmpty()) {
+            throw new ServiceException("Specialization not found", TypicalError.NOT_FOUND);
+        }
+        Specialization update = specializationRepository.getById(request.getId());
         if (request.getName() != null) {
             update.setName(request.getName());
         }
@@ -56,7 +67,11 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public String deleteSpecialization(Long id) {
+    public String deleteSpecialization(Long id) throws ServiceException {
+        Optional<Specialization> specialization= specializationRepository.findById(id);
+        if (specialization.isEmpty()) {
+            throw new ServiceException("Specialization ",TypicalError.NOT_FOUND);
+        }
         log.info("deleted Specialization id={}", id);
         specializationRepository.deleteById(id);
         return "удалена Специализация с id=" + id;

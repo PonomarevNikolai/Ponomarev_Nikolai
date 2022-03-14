@@ -2,6 +2,7 @@ package com.ponomarevnikolaidiplom.controllers;
 
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
 import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class SpecializationController {
         return ResponseEntity.ok().body(specializationService.getAllSpecialization());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<SpecializationResponce> getSpecialization(@PathVariable @RequestBody Long id){
+    public ResponseEntity<SpecializationResponce> getSpecialization(@PathVariable @RequestBody Long id) throws ServiceException {
         return ResponseEntity.ok().body(specializationService.getSpecialization(id));
     }
     @PostMapping("/save")
@@ -30,13 +31,13 @@ public class SpecializationController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateSpecialization(@RequestBody SpecializationRequest request){
+    public ResponseEntity<String> updateSpecialization(@RequestBody SpecializationRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(specializationService.updateSpecialization(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deleteSpecialization(@RequestBody SpecializationRequest request) {
+    public ResponseEntity<String> deleteSpecialization(@RequestBody SpecializationRequest request) throws ServiceException {
         return ResponseEntity.ok().body(specializationService.deleteSpecialization(request.getId()));
     }
 }

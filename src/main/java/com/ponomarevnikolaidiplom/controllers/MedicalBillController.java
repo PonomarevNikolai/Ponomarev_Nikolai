@@ -3,6 +3,7 @@ package com.ponomarevnikolaidiplom.controllers;
 import com.ponomarevnikolaidiplom.dto.DtoId;
 import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.dto.responce.MedicalBillResponce;
+import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class MedicalBillController {
         return ResponseEntity.ok().body(medicalBillService.getAllMedicalBills());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<MedicalBillResponce> getMedicalBill(@PathVariable @RequestBody Long id){
+    public ResponseEntity<MedicalBillResponce> getMedicalBill(@PathVariable @RequestBody Long id) throws ServiceException {
         return ResponseEntity.ok().body(medicalBillService.getMedicalBill(id));
     }
     @PostMapping("/save")
@@ -32,22 +33,22 @@ public class MedicalBillController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateMedicalBill(@RequestBody MedicalBillRequest request){
+    public ResponseEntity<String> updateMedicalBill(@RequestBody MedicalBillRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(medicalBillService.updateMedicalBill(request));
     }
 
     @DeleteMapping ("/delete")
-    public ResponseEntity<String> deleteMedicalBill(@RequestBody MedicalBillRequest request) {
+    public ResponseEntity<String> deleteMedicalBill(@RequestBody MedicalBillRequest request) throws ServiceException {
 
         return ResponseEntity.ok().body(medicalBillService.deleteMedicalBill(request.getId()));
     }
     @PostMapping("/addspecialization")
-    public ResponseEntity<String> addSpecializationToMedicalBill(@RequestBody DtoId dtoId){
+    public ResponseEntity<String> addSpecializationToMedicalBill(@RequestBody DtoId dtoId) throws ServiceException {
         return ResponseEntity.ok().body(medicalBillService.addSpecializationToMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
     }
     @DeleteMapping("/deletespecialization")
-    public ResponseEntity<String> deleteSpecializationFromMedicalBill(@RequestBody DtoId dtoId){
+    public ResponseEntity<String> deleteSpecializationFromMedicalBill(@RequestBody DtoId dtoId) throws ServiceException {
         return ResponseEntity.ok().body(medicalBillService.deleteSpecializationFromMedicalBill(dtoId.getIdSpecilization(), dtoId.getIdMedicalBill()));
     }
 
