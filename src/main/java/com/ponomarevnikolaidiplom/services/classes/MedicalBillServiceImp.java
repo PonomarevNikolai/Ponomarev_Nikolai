@@ -49,7 +49,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
     public List<MedicalBillResponce> getAllMedicalBills(int page, int size) {
         Page<MedicalBill> medicalBillPage=medicalBillRepository.findAll(PageRequest.of(page,size));
         List<MedicalBillResponce> medicalBillResponceList = new ArrayList<>();
-        medicalBillRepository.findAll().forEach(medicalBill ->
+        medicalBillPage.forEach(medicalBill ->
                 medicalBillResponceList.add(convertMedicalBillToMedicalBillResponce(medicalBill)));
         log.info("get all MedicalBills ");
         return medicalBillResponceList;

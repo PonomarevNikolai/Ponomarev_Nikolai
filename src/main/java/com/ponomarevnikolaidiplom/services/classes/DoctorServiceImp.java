@@ -57,7 +57,7 @@ public class DoctorServiceImp implements DoctorService {
         Page<Doctor> doctorPage=doctorRepository.findAll(PageRequest.of(page, size));
         log.info("get all Doctors");
         List<DoctorResponce> doctorResponceList=new ArrayList<>();
-        doctorRepository.findAll().forEach(doctor ->
+        doctorPage.forEach(doctor ->
             doctorResponceList.add(convertDoctorToDoctorResponce(doctor))
         );
         return doctorResponceList;

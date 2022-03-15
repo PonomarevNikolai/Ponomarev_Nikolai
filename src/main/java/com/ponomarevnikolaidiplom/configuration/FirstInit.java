@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 @Configuration
 @RequiredArgsConstructor
-public class firstInit {
+public class FirstInit {
     final SpecializationRepository specializationRepository;
 
     @Bean

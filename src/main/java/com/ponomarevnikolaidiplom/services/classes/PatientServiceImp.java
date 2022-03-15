@@ -52,7 +52,7 @@ public class PatientServiceImp implements PatientService {
         Page<Patient> patientPage=patientRepository.findAll(PageRequest.of(page,size));
         log.info("get all Patients ");
         List<PatientResponce> patientResponceList = new ArrayList<>();
-        patientRepository.findAll().forEach(patient -> patientResponceList.add(convertPatientToPatientResponce(patient)));
+        patientPage.forEach(patient -> patientResponceList.add(convertPatientToPatientResponce(patient)));
         return patientResponceList;
     }
 

@@ -49,7 +49,7 @@ public class DistrictServiceImp implements DistrictService {
     public List<DistrictResponce> getAllDistricts(int page, int size) {
         Page<District> districtPage=districtRepository.findAll(PageRequest.of(page, size));
         List<DistrictResponce> districtResponceList = new ArrayList<>();
-        districtRepository.findAll().forEach(district ->
+        districtPage.forEach(district ->
                 districtResponceList.add(convertDistrictToDistrictResponce(district)));
         log.info("get all Districts");
         return districtResponceList;
