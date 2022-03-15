@@ -1,4 +1,4 @@
-package com.ponomarevnikolaidiplom.exceptionHandler;
+package com.ponomarevnikolaidiplom.exceptionhandler;
 
 import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import lombok.extern.slf4j.Slf4j;

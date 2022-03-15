@@ -18,8 +18,11 @@ public class DistrictController {
 final DistrictService districtService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<DistrictResponce>> getAllDistrict() {
-        return ResponseEntity.ok().body(districtService.getAllDistricts());
+    public ResponseEntity<List<DistrictResponce>> getAllDistrict(
+            @RequestParam(value = "page",required = false,defaultValue = "0") Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok().body(districtService.getAllDistricts(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<DistrictResponce> getDistrict(@PathVariable @RequestBody Long id) throws ServiceException {

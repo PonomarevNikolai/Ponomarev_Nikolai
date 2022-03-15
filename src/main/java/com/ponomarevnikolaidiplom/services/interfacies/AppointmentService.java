@@ -13,7 +13,7 @@ public interface AppointmentService {
 
     AppointmentResponce getAppointment(Long id) throws ServiceException;
 
-    List<AppointmentResponce> getAllAppointment();
+    List<AppointmentResponce> getAllAppointment(int page, int size);
 
     String updateAppointment(AppointmentRequest request) throws ServiceException;
 

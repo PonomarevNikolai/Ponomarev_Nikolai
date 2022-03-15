@@ -12,7 +12,7 @@ public interface MedicalBillService {
 
     MedicalBillResponce getMedicalBill(Long id) throws ServiceException;
 
-    List<MedicalBillResponce> getAllMedicalBills();
+    List<MedicalBillResponce> getAllMedicalBills(int page, int size);
 
     String updateMedicalBill(MedicalBillRequest request) throws ServiceException;
 

@@ -19,8 +19,11 @@ public class DoctorController {
     final DoctorService doctorService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<DoctorResponce>> getAllDoctors() {
-        return ResponseEntity.ok().body(doctorService.getAllDoctors());
+    public ResponseEntity<List<DoctorResponce>> getAllDoctors(
+            @RequestParam(value = "page",required = false,defaultValue = "0") Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok().body(doctorService.getAllDoctors(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<DoctorResponce> getDoctor(@PathVariable @RequestBody Long id) throws ServiceException {

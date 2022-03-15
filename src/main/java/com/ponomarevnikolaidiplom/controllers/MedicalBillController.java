@@ -20,8 +20,11 @@ public class MedicalBillController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<MedicalBillResponce>> getAllMedicalBills() {
-        return ResponseEntity.ok().body(medicalBillService.getAllMedicalBills());
+    public ResponseEntity<List<MedicalBillResponce>> getAllMedicalBills(
+            @RequestParam(value = "page",required = false,defaultValue = "0") Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok().body(medicalBillService.getAllMedicalBills(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<MedicalBillResponce> getMedicalBill(@PathVariable @RequestBody Long id) throws ServiceException {

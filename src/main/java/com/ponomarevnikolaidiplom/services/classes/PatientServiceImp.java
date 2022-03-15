@@ -3,12 +3,14 @@ package com.ponomarevnikolaidiplom.services.classes;
 import com.ponomarevnikolaidiplom.dto.request.PatientRequest;
 import com.ponomarevnikolaidiplom.dto.responce.PatientResponce;
 import com.ponomarevnikolaidiplom.entities.Patient;
-import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptionhandler.TypicalError;
 import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.PatientRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +23,16 @@ import java.util.Optional;
 public class PatientServiceImp implements PatientService {
 
     final PatientRepository patientRepository;
+    private static final String PATIENTNOTFOUND = "Patient not found";
 
     public PatientResponce savePatient(PatientRequest request) throws ServiceException {
-        if (request.getNumberOfInsurance()==null) {
+        if (request.getNumberOfInsurance() == null) {
             throw new ServiceException("Patient number of insurance not fill", TypicalError.BAD_REQUEST);
         }
-        if (request.getName()==null) {
+        if (request.getName() == null) {
             throw new ServiceException("Patient name not fill", TypicalError.BAD_REQUEST);
         }
-        log.info("new Patient added name={}",request.getName());
+        log.info("new Patient added name={}", request.getName());
         return convertPatientToPatientResponce(patientRepository.save(convertRequestToPatient(request)));
     }
 
@@ -37,16 +40,18 @@ public class PatientServiceImp implements PatientService {
     public PatientResponce getPatient(Long id) throws ServiceException {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+
+            throw new ServiceException(PATIENTNOTFOUND, TypicalError.NOT_FOUND);
         }
         log.info("get Patient by id");
         return convertPatientToPatientResponce(patientRepository.getById(id));
     }
 
     @Override
-    public List<PatientResponce> getAllPatients() {
+    public List<PatientResponce> getAllPatients(int page, int size) {
+        Page<Patient> patientPage=patientRepository.findAll(PageRequest.of(page,size));
         log.info("get all Patients ");
-        List<PatientResponce> patientResponceList=new ArrayList<>();
+        List<PatientResponce> patientResponceList = new ArrayList<>();
         patientRepository.findAll().forEach(patient -> patientResponceList.add(convertPatientToPatientResponce(patient)));
         return patientResponceList;
     }
@@ -55,7 +60,7 @@ public class PatientServiceImp implements PatientService {
     public String updatePatient(PatientRequest request) throws ServiceException {
         Optional<Patient> patient = patientRepository.findById(request.getId());
         if (patient.isEmpty()) {
-            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(PATIENTNOTFOUND, TypicalError.NOT_FOUND);
         }
         Patient update = patientRepository.getById(request.getId());
         if (request.getName() != null) {
@@ -75,7 +80,7 @@ public class PatientServiceImp implements PatientService {
 
         patientRepository.saveAndFlush(update);
         log.info("updated Patient id={}", request.getId());
-        return "Обновлен Pacient с id=" + update.getId()+" name="+request.getName();
+        return "Обновлен Pacient с id=" + update.getId() + " name=" + request.getName();
 
     }
 
@@ -83,7 +88,7 @@ public class PatientServiceImp implements PatientService {
     public void deletePatient(Long id) throws ServiceException {
         Optional<Patient> patient = patientRepository.findById(id);
         if (patient.isEmpty()) {
-            throw new ServiceException("Patient not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(PATIENTNOTFOUND, TypicalError.NOT_FOUND);
         }
         log.info("deleted Patient id={}", id);
         patientRepository.deleteById(id);
@@ -99,11 +104,12 @@ public class PatientServiceImp implements PatientService {
                 request.getAddress(),
                 new ArrayList<>());
     }
+
     private PatientResponce convertPatientToPatientResponce(Patient responce) {
-        List<String> appointmentStringList=new ArrayList<>();
-        responce.getAppointmentList().forEach(appointment -> appointmentStringList.add("id="+appointment.getId()
-                +", patient id=" +appointment.getPatient().getId()
-                +", date="+appointment.getDateAndTimeOfAppointment()));
+        List<String> appointmentStringList = new ArrayList<>();
+        responce.getAppointmentList().forEach(appointment -> appointmentStringList.add("id=" + appointment.getId()
+                + ", patient id=" + appointment.getPatient().getId()
+                + ", date=" + appointment.getDateAndTimeOfAppointment()));
         return new PatientResponce(responce.getId(),
                 responce.getNumberOfInsurance(),
                 responce.getName(),

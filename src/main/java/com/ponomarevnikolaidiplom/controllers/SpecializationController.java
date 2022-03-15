@@ -18,8 +18,10 @@ public class SpecializationController {
     final SpecializationService specializationService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<SpecializationResponce>> getAllSpecialization() {
-        return ResponseEntity.ok().body(specializationService.getAllSpecialization());
+    public ResponseEntity<List<SpecializationResponce>> getAllSpecialization(
+            @RequestParam(value = "page",required = false,defaultValue = "0") Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "10") Integer size) {
+        return ResponseEntity.ok().body(specializationService.getAllSpecialization(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<SpecializationResponce> getSpecialization(@PathVariable @RequestBody Long id) throws ServiceException {

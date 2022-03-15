@@ -4,13 +4,15 @@ import com.ponomarevnikolaidiplom.dto.request.MedicalBillRequest;
 import com.ponomarevnikolaidiplom.dto.responce.MedicalBillResponce;
 import com.ponomarevnikolaidiplom.entities.MedicalBill;
 import com.ponomarevnikolaidiplom.entities.Specialization;
-import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptionhandler.TypicalError;
 import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.MedicalBillRepository;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.MedicalBillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
 
     final MedicalBillRepository medicalBillRepository;
     final SpecializationRepository specializationRepository;
+    private static final String MEDICALBILLNOTFOUND = "MedicalBill not found";
 
     @Override
     public MedicalBillResponce saveMedicalBill(MedicalBillRequest request) {
@@ -35,18 +38,20 @@ public class MedicalBillServiceImp implements MedicalBillService {
     public MedicalBillResponce getMedicalBill(Long id) throws ServiceException {
         Optional<MedicalBill> request = medicalBillRepository.findById(id);
         if (request.isEmpty()) {
-            throw new ServiceException("MedicalBill not found", TypicalError.NOT_FOUND);
+
+            throw new ServiceException(MEDICALBILLNOTFOUND, TypicalError.NOT_FOUND);
         }
         log.info("get MedicalBill by id={}", id);
         return convertMedicalBillToMedicalBillResponce(medicalBillRepository.findMedicalBillById(id));
     }
 
     @Override
-    public List<MedicalBillResponce> getAllMedicalBills() {
-        log.info("get all MedicalBills ");
+    public List<MedicalBillResponce> getAllMedicalBills(int page, int size) {
+        Page<MedicalBill> medicalBillPage=medicalBillRepository.findAll(PageRequest.of(page,size));
         List<MedicalBillResponce> medicalBillResponceList = new ArrayList<>();
         medicalBillRepository.findAll().forEach(medicalBill ->
                 medicalBillResponceList.add(convertMedicalBillToMedicalBillResponce(medicalBill)));
+        log.info("get all MedicalBills ");
         return medicalBillResponceList;
     }
 
@@ -57,7 +62,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
         }
         Optional<MedicalBill> medicalBillOptional = medicalBillRepository.findById(request.getId());
         if (medicalBillOptional.isEmpty()) {
-            throw new ServiceException("MedicalBill not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(MEDICALBILLNOTFOUND, TypicalError.NOT_FOUND);
         }
         MedicalBill update = medicalBillRepository.getById(request.getId());
 
@@ -77,7 +82,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
     public String deleteMedicalBill(Long id) throws ServiceException {
         Optional<MedicalBill> medicalBillOptional = medicalBillRepository.findById(id);
         if (medicalBillOptional.isEmpty()) {
-            throw new ServiceException("MedicalBill not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(MEDICALBILLNOTFOUND, TypicalError.NOT_FOUND);
         }
         log.info("deleted MedicalBill id={}", id);
         medicalBillRepository.deleteById(id);
@@ -89,7 +94,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
         Optional<MedicalBill> medicalBillOptional = medicalBillRepository.findById(idMedicalBill);
 
         if (medicalBillOptional.isEmpty()) {
-            throw new ServiceException("MedicalBill not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(MEDICALBILLNOTFOUND, TypicalError.NOT_FOUND);
         }
 
         Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);
@@ -111,7 +116,7 @@ public class MedicalBillServiceImp implements MedicalBillService {
         Optional<MedicalBill> medicalBillOptional = medicalBillRepository.findById(idMedicalBill);
 
         if (medicalBillOptional.isEmpty()) {
-            throw new ServiceException("MedicalBill not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(MEDICALBILLNOTFOUND, TypicalError.NOT_FOUND);
         }
 
         Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);

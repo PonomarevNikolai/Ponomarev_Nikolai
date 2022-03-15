@@ -3,12 +3,14 @@ package com.ponomarevnikolaidiplom.services.classes;
 import com.ponomarevnikolaidiplom.dto.request.SpecializationRequest;
 import com.ponomarevnikolaidiplom.dto.responce.SpecializationResponce;
 import com.ponomarevnikolaidiplom.entities.Specialization;
-import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptionhandler.TypicalError;
 import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.SpecializationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,11 +41,13 @@ public class SpecializationServiceImp implements SpecializationService {
     }
 
     @Override
-    public List<SpecializationResponce> getAllSpecialization() {
-        log.info("get all Specializations");
+    public List<SpecializationResponce> getAllSpecialization(int page, int size) {
+
+        Page<Specialization> specializationPage=specializationRepository.findAll(PageRequest.of(page, size));
         List<SpecializationResponce> specializationResponceList = new ArrayList<>();
-        specializationRepository.findAll().forEach(specialization ->
+        specializationPage.forEach(specialization ->
                 specializationResponceList.add(convertSpecializationToSpecializationResponce(specialization)));
+        log.info("get all Specializations");
         return specializationResponceList;
     }
 

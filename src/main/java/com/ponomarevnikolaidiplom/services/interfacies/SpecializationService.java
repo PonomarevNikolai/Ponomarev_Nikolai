@@ -11,7 +11,7 @@ public interface SpecializationService {
 
     SpecializationResponce getSpecialization(Long id) throws ServiceException;
 
-    List<SpecializationResponce> getAllSpecialization();
+    List<SpecializationResponce> getAllSpecialization(int page, int size);
 
     String updateSpecialization(SpecializationRequest request) throws ServiceException;
 

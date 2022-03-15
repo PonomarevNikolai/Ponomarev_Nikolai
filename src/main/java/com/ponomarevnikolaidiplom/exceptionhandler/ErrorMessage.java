@@ -1,4 +1,4 @@
-package com.ponomarevnikolaidiplom.exceptionHandler;
+package com.ponomarevnikolaidiplom.exceptionhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

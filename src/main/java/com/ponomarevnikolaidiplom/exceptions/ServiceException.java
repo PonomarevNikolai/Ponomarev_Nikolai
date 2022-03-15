@@ -1,6 +1,6 @@
 package com.ponomarevnikolaidiplom.exceptions;
 
-import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptionhandler.TypicalError;
 import lombok.Getter;
 
 @Getter

@@ -5,7 +5,7 @@ import com.ponomarevnikolaidiplom.dto.responce.DoctorResponce;
 import com.ponomarevnikolaidiplom.entities.District;
 import com.ponomarevnikolaidiplom.entities.Doctor;
 import com.ponomarevnikolaidiplom.entities.Specialization;
-import com.ponomarevnikolaidiplom.exceptionHandler.TypicalError;
+import com.ponomarevnikolaidiplom.exceptionhandler.TypicalError;
 import com.ponomarevnikolaidiplom.exceptions.ServiceException;
 import com.ponomarevnikolaidiplom.repozitories.DistrictRepository;
 import com.ponomarevnikolaidiplom.repozitories.DoctorRepository;
@@ -13,6 +13,8 @@ import com.ponomarevnikolaidiplom.repozitories.SpecializationRepository;
 import com.ponomarevnikolaidiplom.services.interfacies.DoctorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class DoctorServiceImp implements DoctorService {
     final DoctorRepository doctorRepository;
     final SpecializationRepository specializationRepository;
     final DistrictRepository districtRepository;
+    private static final String DOCTORNOTFOUND = "Doctor not found";
 
     @Override
     public DoctorResponce saveDoctor(DoctorRequest doctorRequest) {
@@ -40,7 +43,8 @@ public class DoctorServiceImp implements DoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(id);
 
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
 
         log.info("get Doctor by id={}", id);
@@ -49,7 +53,8 @@ public class DoctorServiceImp implements DoctorService {
     }
 
     @Override
-    public List<DoctorResponce> getAllDoctors() {
+    public List<DoctorResponce> getAllDoctors(int page, int size) {
+        Page<Doctor> doctorPage=doctorRepository.findAll(PageRequest.of(page, size));
         log.info("get all Doctors");
         List<DoctorResponce> doctorResponceList=new ArrayList<>();
         doctorRepository.findAll().forEach(doctor ->
@@ -63,7 +68,7 @@ public class DoctorServiceImp implements DoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(request.getId());
 
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
         Doctor update = doctorRepository.findDoctorById(request.getId());
         if (request.getName() == null) {
@@ -82,7 +87,7 @@ public class DoctorServiceImp implements DoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(id);
 
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
         log.info("deleted Doctor id={} ", id);
         doctorRepository.deleteById(id);
@@ -94,7 +99,7 @@ public class DoctorServiceImp implements DoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
 
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
 
         Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);
@@ -118,7 +123,7 @@ public class DoctorServiceImp implements DoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
 
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
 
         Optional<Specialization> specializationOptional = specializationRepository.findById(idSpecialization);
@@ -139,17 +144,13 @@ public class DoctorServiceImp implements DoctorService {
     @Override
     public String addDistrictToDoctror(Long idDistrict, Long idDoctor) throws ServiceException {
         Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
-
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
-
         Optional<District> districtOptional = districtRepository.findById(idDistrict);
-
         if (districtOptional.isEmpty()) {
             throw new ServiceException("District not found", TypicalError.NOT_FOUND);
         }
-
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         District district=districtRepository.getById(idDistrict);
         doctor.setDistrict(district);
@@ -163,21 +164,17 @@ public class DoctorServiceImp implements DoctorService {
     @Override
     public String deleteDistrictToDoctror(Long idDistrict, Long idDoctor) throws ServiceException {
         Optional<Doctor> doctorOptional = doctorRepository.findById(idDoctor);
-
         if (doctorOptional.isEmpty()) {
-            throw new ServiceException("Doctor not found", TypicalError.NOT_FOUND);
+            throw new ServiceException(DOCTORNOTFOUND, TypicalError.NOT_FOUND);
         }
-
         Optional<District> districtOptional = districtRepository.findById(idDistrict);
-
         if (districtOptional.isEmpty()) {
             throw new ServiceException("District not found", TypicalError.NOT_FOUND);
         }
-
         Doctor doctor=doctorRepository.findDoctorById(idDoctor);
         District district=districtRepository.getById(idDistrict);
 
-        if (doctor.getDistrict().getName()!=district.getName()) {
+        if (!doctor.getDistrict().getName().equals(district.getName())) {
             throw new ServiceException("Bad request. Wrong doctor or district", TypicalError.BAD_REQUEST);
         }
         doctor.setDistrict(null);

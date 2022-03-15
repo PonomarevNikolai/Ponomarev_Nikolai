@@ -1,4 +1,4 @@
-package com.ponomarevnikolaidiplom.exceptionHandler;
+package com.ponomarevnikolaidiplom.exceptionhandler;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

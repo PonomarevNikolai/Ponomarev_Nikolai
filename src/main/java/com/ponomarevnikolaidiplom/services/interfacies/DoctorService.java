@@ -11,7 +11,7 @@ public interface DoctorService {
 
     DoctorResponce getDoctor(Long id) throws ServiceException;
 
-    List<DoctorResponce> getAllDoctors();
+    List<DoctorResponce> getAllDoctors(int page, int size);
 
     String updateDoctor(DoctorRequest request) throws ServiceException;
 

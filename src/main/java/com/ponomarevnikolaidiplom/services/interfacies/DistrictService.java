@@ -11,7 +11,7 @@ public interface DistrictService {
 
     DistrictResponce getDistrict(Long id) throws ServiceException;
 
-    List<DistrictResponce> getAllDistricts();
+    List<DistrictResponce> getAllDistricts(int page, int size);
 
     String updateDistrict(DistrictRequest request) throws ServiceException;
 

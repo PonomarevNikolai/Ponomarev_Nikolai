@@ -18,8 +18,10 @@ public class AppointmentController {
     final AppointmentService appointmentService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<AppointmentResponce>> getAllAppointment() {
-        return ResponseEntity.ok().body(appointmentService.getAllAppointment());
+    public ResponseEntity<List<AppointmentResponce>> getAllAppointment(
+            @RequestParam(value = "page",required = false,defaultValue = "0") Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "10") Integer size) {
+        return ResponseEntity.ok().body(appointmentService.getAllAppointment(page,size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentResponce> getAppointment(@PathVariable @RequestBody Long id) throws ServiceException {
